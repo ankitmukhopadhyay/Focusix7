@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Focusix7</string>
+    <string name="title_activity_main">Focusix7</string>
+    <string name="package_name">io.focusix7.app</string>
+    <string name="custom_url_scheme">io.focusix7.app</string>
+    <string name="accessibility_service_label">Focusix7 Focus Blocker</string>
+    <string name="accessibility_description">While a Focusix7 focus session is running, this service redirects you back to Focusix7 whenever you try to open another app. It does nothing when no session is active. Focusix7 reads only the package name of the foreground app — no screen content, no keystrokes.</string>
+</resources>

@@ -45,8 +45,9 @@ const SHOP_ITEMS = [
 const ITEM_BY_ID = Object.fromEntries(SHOP_ITEMS.map(i => [i.id, i]));
 const VALID_ITEM_IDS = new Set(Object.keys(ITEM_BY_ID));
 
-const BANISH_BONUS_CELLS = 50;
-const BANISH_BONUS_AURA  = 1;
+const _H = (typeof window !== "undefined" && window.Focusix7Helpers) || {};
+const BANISH_BONUS_CELLS = _H.BANISH_BONUS_CELLS != null ? _H.BANISH_BONUS_CELLS : 50;
+const BANISH_BONUS_AURA  = _H.BANISH_BONUS_AURA  != null ? _H.BANISH_BONUS_AURA  : 1;
 
 const VILLAIN_TAUNTS = [
   "6-7 🤡",
@@ -87,45 +88,9 @@ function loadState() {
 }
 
 function migrateState(s) {
-  // Currency rename
-  if (typeof s.socks === "number")   { s.brainCells = (s.brainCells || 0) + s.socks;   delete s.socks; }
-  if (typeof s.scarves === "number") { s.aura       = (s.aura || 0)       + s.scarves; delete s.scarves; }
-  // Name rename
-  if (typeof s.beanName === "string" && (!s.heroName || s.heroName === "Mr. Interesting")) {
-    s.heroName = s.beanName;
+  if (_H.migrateState) {
+    return _H.migrateState(s, { validItemIds: VALID_ITEM_IDS, defaultState: DEFAULT_STATE });
   }
-  delete s.beanName;
-  // Skin id rename
-  const legacySkin = { default: "classic", coffee: "detective", edamame: "scholar",
-                       pinto: "wizard", kitty: "astronaut", jelly: "sigma", space: "knight" };
-  if (legacySkin[s.skin]) s.skin = legacySkin[s.skin];
-
-  // Owned-item id rename + drop unknown
-  if (Array.isArray(s.ownedItems)) {
-    const skinIdMap = {
-      skin_default:  "skin_classic",
-      skin_coffee:   "skin_detective",
-      skin_edamame:  "skin_scholar",
-      skin_pinto:    "skin_wizard",
-      skin_kitty:    "skin_astronaut",
-      skin_jelly:    "skin_sigma",
-      skin_space:    "skin_knight",
-    };
-    s.ownedItems = s.ownedItems
-      .map(id => skinIdMap[id] || id)
-      .filter(id => VALID_ITEM_IDS.has(id));
-    if (!s.ownedItems.includes("skin_classic")) s.ownedItems.unshift("skin_classic");
-    s.ownedItems = [...new Set(s.ownedItems)];
-  }
-  // Drop placed items that no longer exist
-  if (s.placed && typeof s.placed === "object") {
-    const next = {};
-    for (const [k, v] of Object.entries(s.placed)) {
-      if (VALID_ITEM_IDS.has(k)) next[k] = v;
-    }
-    s.placed = next;
-  }
-  if (typeof s.worldFocus !== "number") s.worldFocus = 50;
   return s;
 }
 
@@ -210,6 +175,10 @@ function buildVillainSvg() {
 let currentScreen = "room";
 
 function showScreen(name) {
+  if (focusState && focusState.running && name !== "focus") {
+    // Lock to the focus screen for the duration of the session.
+    return;
+  }
   currentScreen = name;
   $$(".screen").forEach(s => s.classList.remove("active"));
   $("#screen-" + name).classList.add("active");
@@ -592,10 +561,8 @@ function updateTimerDisplay() {
   const ms = focusState.running
     ? Math.max(0, focusState.endTime - Date.now())
     : focusState.durationMin * 60 * 1000;
-  const totalSec = Math.ceil(ms / 1000);
-  const min = Math.floor(totalSec / 60);
-  const sec = totalSec % 60;
-  $("#timerText").textContent = `${String(min).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+  $("#timerText").textContent = _H.formatTimer ? _H.formatTimer(ms)
+    : `${String(Math.floor(Math.ceil(ms/1000)/60)).padStart(2,"0")}:${String(Math.ceil(ms/1000)%60).padStart(2,"0")}`;
   if (focusState.running) {
     $("#timerSub").textContent = focusState.onBreak
       ? "rest a moment — keep your edge"
@@ -637,7 +604,107 @@ $("#backFromFocus").addEventListener("click", () => {
   showScreen("room");
 });
 
-function startFocus() {
+function promptModal(opts) {
+  return new Promise(resolve => {
+    modal(Object.assign({}, opts, {
+      onConfirm: (val) => resolve({ ok: true, value: val }),
+      onCancel:  ()    => resolve({ ok: false }),
+    }));
+  });
+}
+
+async function ensureFocusPermissions() {
+  const bridge = window.NativeBridge;
+  if (!bridge || !bridge.isNative || !bridge.isNative()) return { ok: true, native: false };
+
+  const seenExplainer = localStorage.getItem("focusix7.lockExplainerSeen") === "1";
+  if (!seenExplainer) {
+    const r = await promptModal({
+      title: "How Focus Lock works",
+      text:
+        "When a focus session is running, Focusix7 hides every other screen of the app and blocks other apps " +
+        "from opening. If you try to leave, we redirect you back. This needs two one-time grants — " +
+        "we'll walk you through them now.",
+      confirm: "Continue",
+      cancel: "Not now",
+    });
+    if (!r.ok) return { ok: false };
+    localStorage.setItem("focusix7.lockExplainerSeen", "1");
+  }
+
+  // 1) Display-over-other-apps (SYSTEM_ALERT_WINDOW)
+  let perms = await bridge.getPermissions();
+  if (!perms.overlay) {
+    const r = await promptModal({
+      title: "Allow display over other apps",
+      text:
+        "Focusix7 needs to draw an overlay on top of other apps so it can redirect you back. " +
+        "We'll open Settings — toggle 'Allow display over other apps' on, then come back here.",
+      confirm: "Open Settings",
+      cancel: "Skip for now",
+    });
+    if (r.ok) {
+      await bridge.requestOverlayPermission();
+      perms = await bridge.getPermissions();
+    }
+  }
+
+  // 2) Accessibility service (the actual blocker)
+  if (!perms.accessibility) {
+    const r = await promptModal({
+      title: "Enable the Focus Blocker",
+      text:
+        "Find 'Focusix7 Focus Blocker' in the Accessibility list and turn it on. " +
+        "It only reads the package name of the foreground app — no screen content, no keystrokes. " +
+        "It does nothing when no focus session is running.",
+      confirm: "Open Accessibility",
+      cancel: "Skip for now",
+    });
+    if (r.ok) {
+      await bridge.openAccessibilitySettings();
+      // The user is now in Settings; they'll come back manually. We re-check below.
+      perms = await bridge.getPermissions();
+    }
+  }
+
+  // 3) Notifications (optional but improves the experience)
+  if (!perms.notifications) {
+    const r = await promptModal({
+      title: "Allow focus notifications?",
+      text:
+        "An ongoing notification shows the timer and keeps the OS from killing the session in the background. " +
+        "Optional — focus still works without it.",
+      confirm: "Open Settings",
+      cancel: "Skip",
+    });
+    if (r.ok) {
+      await bridge.openNotificationSettings();
+      perms = await bridge.getPermissions();
+    }
+  }
+
+  // If overlay or accessibility is still missing, warn that lock will be partial.
+  if (!perms.overlay || !perms.accessibility) {
+    const r = await promptModal({
+      title: "Start without full lock?",
+      text:
+        "Focusix7 will still hide its own screens and start the timer, but other apps won't be blocked. " +
+        "You can grant the missing permissions any time from this screen.",
+      confirm: "Start anyway",
+      cancel: "Not yet",
+    });
+    if (!r.ok) return { ok: false };
+  }
+
+  return { ok: true, native: true, perms };
+}
+
+async function startFocus() {
+  if (focusState.running) return;
+
+  const gate = await ensureFocusPermissions();
+  if (!gate.ok) return;
+
   focusState.running = true;
   focusState.onBreak = false;
   focusState.remainingMs = focusState.durationMin * 60 * 1000;
@@ -647,6 +714,20 @@ function startFocus() {
   tick();
   focusState.intervalId = setInterval(tick, 250);
   showHeroSpeech("Books out! Mr. 67 is shaking 📚");
+
+  const bridge = window.NativeBridge;
+  if (bridge && bridge.isNative && bridge.isNative()) {
+    try {
+      const res = await bridge.requestFocusLock(focusState.durationMin, "Focus battle vs Mr. 67");
+      updateLockBadge(!!(res && (res.blockerActive || res.inLockTaskMode || res.lockRequested)));
+    } catch (_) { updateLockBadge(false); }
+  }
+}
+
+function updateLockBadge(locked) {
+  const badge = document.getElementById("lockBadge");
+  if (!badge) return;
+  badge.classList.toggle("hidden", !locked);
 }
 
 function tick() {
@@ -680,12 +761,8 @@ function finishSuccess() {
 }
 
 function awardBrainCells(minutes) {
-  state.brainCells += minutes;
-  state.totalFocusMinutes += minutes;
-  if (minutes >= 60) state.aura += 1;
-  state.sessionsCompleted += 1;
-  state.worldFocus = Math.min(100, state.worldFocus + 5);
-  if (state.worldFocus >= 100) focusState.banishedThisSession = true;
+  const res = _H.applyFocusReward ? _H.applyFocusReward(state, minutes) : { banished: false };
+  if (res.banished) focusState.banishedThisSession = true;
   saveState();
   renderWallet();
   renderStats();
@@ -699,12 +776,16 @@ function endFocus(success) {
   document.body.classList.remove("focus-active");
   syncFocusUI();
 
+  if (window.NativeBridge && window.NativeBridge.isNative && window.NativeBridge.isNative()) {
+    window.NativeBridge.releaseFocusLock().catch(() => {});
+    updateLockBadge(false);
+  }
+
   if (success) {
     if (focusState.banishedThisSession) {
       focusState.banishedThisSession = false;
-      state.brainCells += BANISH_BONUS_CELLS;
-      state.aura       += BANISH_BONUS_AURA;
-      state.worldFocus = 50;
+      if (_H.applyBanishReward) _H.applyBanishReward(state);
+      else { state.brainCells += BANISH_BONUS_CELLS; state.aura += BANISH_BONUS_AURA; state.worldFocus = 50; }
       saveState();
       renderWallet();
       renderStats();
@@ -738,7 +819,8 @@ function endFocus(success) {
       renderMeter();
     }
   } else {
-    state.worldFocus = Math.max(0, state.worldFocus - 10);
+    if (_H.applyGiveUp) _H.applyGiveUp(state);
+    else state.worldFocus = Math.max(0, state.worldFocus - 10);
     saveState();
     const heroEl = $("#hero");
     if (heroEl) {
@@ -863,3 +945,19 @@ window.addEventListener("beforeunload", (e) => {
     e.returnValue = "";
   }
 });
+
+// ==================== TEST HOOKS ====================
+// Expose internals so the Jest integration tests can drive the SPA
+// without re-creating the DOM-event chain. No-op in production usage.
+if (typeof window !== "undefined") {
+  Object.defineProperty(window, "state", { get: () => state, configurable: true });
+  window.focusState  = focusState;
+  window.tick        = tick;
+  window.startFocus  = startFocus;
+  window.endFocus    = endFocus;
+  window.renderAll   = renderAll;
+  window.renderMeter = renderMeter;
+  window.showScreen  = showScreen;
+  window.SHOP_ITEMS  = SHOP_ITEMS;
+}
+

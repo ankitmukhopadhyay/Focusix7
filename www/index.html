@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#fef3df" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<title>Mr. Interesting vs Mr. 67</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ========== SVG SPRITE ========== -->
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+
+<!-- ====== HERO BASE: head + face + sweater ====== -->
+<symbol id="hero-base" viewBox="0 0 200 280">
+  <!-- shoulders / sweater -->
+  <path d="M6 280 L6 218 Q6 145 100 138 Q194 145 194 218 L194 280 Z"
+        fill="var(--sweater, #8b9bb4)"/>
+  <!-- sweater highlight -->
+  <path d="M30 220 Q26 200 36 188" stroke="var(--sweater-light, #aab8cd)" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>
+  <!-- sleeve creases -->
+  <path d="M22 246 Q18 220 30 208" stroke="var(--sweater-shadow, #6c7d97)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M178 246 Q182 220 170 208" stroke="var(--sweater-shadow, #6c7d97)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <!-- ribbed collar -->
+  <path d="M68 152 Q100 168 132 152 Q132 162 100 172 Q68 162 68 152 Z" fill="var(--collar, #fffaef)" stroke="var(--sweater-shadow, #6c7d97)" stroke-width="1.5"/>
+  <path d="M75 156 L77 162 M85 158 L86 165 M95 160 L96 167 M105 160 L104 167 M115 158 L114 165 M125 156 L123 162" stroke="var(--sweater-shadow, #6c7d97)" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <!-- collar V -->
+  <path d="M88 152 L100 172 L112 152 Z" fill="var(--collar, #fffaef)"/>
+  <!-- neck -->
+  <path d="M86 118 L86 144 Q86 154 100 154 Q114 154 114 144 L114 118 Z" fill="var(--skin, #f4d4b6)"/>
+  <!-- chin shadow -->
+  <ellipse cx="100" cy="138" rx="14" ry="3" fill="var(--skin-shadow, #d9a098)" opacity="0.4"/>
+  <!-- head -->
+  <path d="M55 78 Q55 30 100 26 Q145 30 145 78 L145 102 Q145 138 100 138 Q55 138 55 102 Z" fill="var(--skin, #f4d4b6)"/>
+  <!-- jaw shadow -->
+  <path d="M58 102 Q62 124 80 134" stroke="var(--skin-shadow, #d9a098)" stroke-width="2" fill="none" opacity="0.4" stroke-linecap="round"/>
+  <!-- ears -->
+  <ellipse cx="55" cy="92" rx="5" ry="10" fill="var(--skin, #f4d4b6)"/>
+  <ellipse cx="145" cy="92" rx="5" ry="10" fill="var(--skin, #f4d4b6)"/>
+  <ellipse cx="55" cy="94" rx="2" ry="5" fill="var(--skin-shadow, #d9a098)" opacity="0.55"/>
+  <ellipse cx="145" cy="94" rx="2" ry="5" fill="var(--skin-shadow, #d9a098)" opacity="0.55"/>
+  <!-- eyebrows -->
+  <path d="M71 78 Q80 73 89 78" stroke="#2a1a0c" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <path d="M111 78 Q120 73 129 78" stroke="#2a1a0c" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <!-- eyes -->
+  <ellipse cx="82" cy="89" rx="3.2" ry="4" fill="#2a1a0c"/>
+  <ellipse cx="118" cy="89" rx="3.2" ry="4" fill="#2a1a0c"/>
+  <!-- eye highlight -->
+  <circle cx="83" cy="87.5" r="0.9" fill="#fffaef"/>
+  <circle cx="119" cy="87.5" r="0.9" fill="#fffaef"/>
+  <!-- nose -->
+  <path d="M97 96 Q92 105 96 110 Q100 112 104 110" stroke="var(--skin-shadow, #c89880)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- mouth -->
+  <path d="M88 118 Q100 126 112 118" stroke="#2a1a0c" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <!-- cheek blush -->
+  <ellipse cx="74" cy="108" rx="7" ry="3.5" fill="#f4a78a" opacity="0.45"/>
+  <ellipse cx="126" cy="108" rx="7" ry="3.5" fill="#f4a78a" opacity="0.45"/>
+</symbol>
+
+<!-- ====== HAIR / HAT VARIANTS ====== -->
+<symbol id="hair-classic" viewBox="0 0 200 280">
+  <path d="M58 70 Q56 32 96 27 Q108 24 132 32 Q146 42 144 72 Q140 56 128 54 Q116 64 96 60 Q82 64 72 55 Q63 60 58 70 Z" fill="var(--hair, #5a2f1d)"/>
+  <path d="M70 56 Q90 50 116 56" stroke="var(--hair-shadow, #3a1e10)" stroke-width="1.5" fill="none" opacity="0.6" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="hat-fedora" viewBox="0 0 200 280">
+  <!-- brim -->
+  <ellipse cx="100" cy="56" rx="62" ry="8" fill="#3a2418" stroke="#1a0e08" stroke-width="2"/>
+  <!-- crown -->
+  <path d="M62 56 Q62 24 100 22 Q138 24 138 56 Z" fill="#5a3a22" stroke="#2a1a0c" stroke-width="2"/>
+  <!-- band -->
+  <rect x="62" y="50" width="76" height="6" fill="#2a1a0c"/>
+</symbol>
+
+<symbol id="hat-mortarboard" viewBox="0 0 200 280">
+  <path d="M58 56 Q56 36 96 30 Q108 28 132 32 Q142 38 142 60 Q138 50 128 50 Q114 56 96 56 Q80 56 70 48 Q62 50 58 60 Z" fill="#1a1a1a"/>
+  <rect x="44" y="32" width="112" height="12" fill="#1a1a1a" stroke="#000" stroke-width="2"/>
+  <line x1="100" y1="32" x2="140" y2="20" stroke="#1a1a1a" stroke-width="2.5"/>
+  <circle cx="142" cy="20" r="5" fill="#d4a64a"/>
+</symbol>
+
+<symbol id="hat-wizard" viewBox="0 0 200 280">
+  <path d="M62 60 L100 -10 L138 60 Z" fill="#3a2a6b" stroke="#1f1740" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M60 60 Q100 50 140 60 Q140 64 100 64 Q60 64 60 60 Z" fill="#3a2a6b" stroke="#1f1740" stroke-width="2"/>
+  <circle cx="100" cy="20" r="2" fill="#f3d774"/>
+  <circle cx="120" cy="38" r="1.5" fill="#f3d774"/>
+  <circle cx="84" cy="42" r="1.5" fill="#f3d774"/>
+</symbol>
+
+<symbol id="helmet-astronaut" viewBox="0 0 200 280">
+  <!-- base helmet ring -->
+  <rect x="46" y="120" width="108" height="14" rx="4" fill="#d6dce3" stroke="#1a2a3a" stroke-width="2"/>
+  <!-- glass dome -->
+  <circle cx="100" cy="80" r="58" fill="rgba(220,240,255,0.35)" stroke="#d6dce3" stroke-width="4"/>
+  <!-- dome highlight -->
+  <path d="M62 50 Q72 36 92 36" stroke="#fffaef" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.8"/>
+  <!-- bolts -->
+  <circle cx="58" cy="127" r="2.5" fill="#1a2a3a"/>
+  <circle cx="142" cy="127" r="2.5" fill="#1a2a3a"/>
+</symbol>
+
+<symbol id="helmet-knight" viewBox="0 0 200 280">
+  <!-- main helmet shape -->
+  <path d="M50 28 Q50 14 100 12 Q150 14 150 28 L154 90 Q154 114 100 116 Q46 114 46 90 Z" fill="#c2c4c8" stroke="#3a3a3e" stroke-width="2.5"/>
+  <!-- visor -->
+  <rect x="64" y="80" width="72" height="10" fill="#1a1a1a" stroke="#3a3a3e" stroke-width="1.5" rx="2"/>
+  <!-- visor slits -->
+  <line x1="74" y1="82" x2="74" y2="88" stroke="#c2c4c8" stroke-width="1.5"/>
+  <line x1="86" y1="82" x2="86" y2="88" stroke="#c2c4c8" stroke-width="1.5"/>
+  <line x1="100" y1="82" x2="100" y2="88" stroke="#c2c4c8" stroke-width="1.5"/>
+  <line x1="114" y1="82" x2="114" y2="88" stroke="#c2c4c8" stroke-width="1.5"/>
+  <line x1="126" y1="82" x2="126" y2="88" stroke="#c2c4c8" stroke-width="1.5"/>
+  <!-- plume -->
+  <path d="M100 12 Q90 0 95 -8 Q105 -10 110 0 Q108 8 100 12" fill="#c84a3a" stroke="#3a3a3e" stroke-width="1.5"/>
+  <!-- cheek lines -->
+  <path d="M62 60 Q60 80 64 100" stroke="#3a3a3e" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M138 60 Q140 80 136 100" stroke="#3a3a3e" stroke-width="1.5" fill="none" opacity="0.5"/>
+</symbol>
+
+<!-- ====== EYEWEAR ====== -->
+<symbol id="glasses-default" viewBox="0 0 200 280">
+  <circle cx="82" cy="89" r="11" stroke="#2a1a0c" stroke-width="2.5" fill="none"/>
+  <circle cx="118" cy="89" r="11" stroke="#2a1a0c" stroke-width="2.5" fill="none"/>
+  <line x1="93" y1="89" x2="107" y2="89" stroke="#2a1a0c" stroke-width="2.5"/>
+</symbol>
+
+<symbol id="glasses-sunglasses" viewBox="0 0 200 280">
+  <path d="M70 84 Q68 102 84 100 Q96 98 96 86 Q96 82 82 80 Q72 80 70 84 Z" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="2"/>
+  <path d="M104 86 Q104 98 116 100 Q132 102 130 84 Q128 80 118 80 Q104 82 104 86 Z" fill="#1a1a1a" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="96" y1="89" x2="104" y2="89" stroke="#1a1a1a" stroke-width="2.5"/>
+  <path d="M76 88 Q80 84 86 86" stroke="#666" stroke-width="1.5" fill="none" opacity="0.6"/>
+</symbol>
+
+<!-- ====== BOWTIE ====== -->
+<symbol id="bowtie" viewBox="0 0 200 280">
+  <path d="M82 148 L96 158 L96 168 L82 178 L76 174 L80 162 L76 152 Z" fill="var(--bowtie-color, #d97a4a)" stroke="#3a2a1c" stroke-width="1.5"/>
+  <path d="M118 148 L104 158 L104 168 L118 178 L124 174 L120 162 L124 152 Z" fill="var(--bowtie-color, #d97a4a)" stroke="#3a2a1c" stroke-width="1.5"/>
+  <rect x="96" y="158" width="8" height="10" fill="var(--bowtie-color, #d97a4a)" stroke="#3a2a1c" stroke-width="1.5"/>
+</symbol>
+
+<!-- ====== MR. 67 (villain) ====== -->
+<symbol id="villain-base" viewBox="0 0 200 280">
+  <!-- glitchy aura -->
+  <ellipse cx="100" cy="140" rx="80" ry="8" fill="#c84a8a" opacity="0.2"/>
+  <!-- shoulders/sweater (gradient feel) -->
+  <path d="M14 280 L14 218 Q14 148 100 142 Q186 148 186 218 L186 280 Z" fill="#6a4c9c"/>
+  <path d="M14 218 Q60 200 100 220 Q140 200 186 218" stroke="#c84a8a" stroke-width="3" fill="none" opacity="0.7"/>
+  <!-- collar -->
+  <path d="M76 156 Q100 170 124 156 Q124 164 100 174 Q76 164 76 156 Z" fill="#3d2562"/>
+  <path d="M88 156 L100 174 L112 156 Z" fill="#3d2562"/>
+  <!-- neck -->
+  <path d="M88 122 L88 144 Q88 154 100 154 Q112 154 112 144 L112 122 Z" fill="#b89cd9"/>
+  <ellipse cx="100" cy="138" rx="12" ry="3" fill="#8e6db5" opacity="0.5"/>
+  <!-- head -->
+  <path d="M58 80 Q58 32 100 28 Q142 32 142 80 L142 102 Q142 138 100 138 Q58 138 58 102 Z" fill="#b89cd9"/>
+  <!-- ears -->
+  <ellipse cx="58" cy="92" rx="4.5" ry="9" fill="#b89cd9"/>
+  <ellipse cx="142" cy="92" rx="4.5" ry="9" fill="#b89cd9"/>
+  <!-- spiky messy hair -->
+  <path d="M58 64 L62 38 L72 56 L78 28 L88 54 L96 24 L106 54 L114 26 L124 56 L132 36 L142 64 Q132 50 124 52 Q114 58 100 56 Q86 58 76 52 Q68 50 58 64 Z"
+        fill="#1a0f2a" stroke="#0a0510" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- the "67" mark on forehead -->
+  <text x="100" y="78" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="20" font-weight="900" fill="#f5e9ff" stroke="#c84a8a" stroke-width="1" letter-spacing="-1">67</text>
+  <!-- wonky asymmetric eyebrows -->
+  <path d="M70 88 Q78 84 88 90" stroke="#1a0f2a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <path d="M112 90 Q120 84 128 88" stroke="#1a0f2a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <!-- big creepy eyes -->
+  <ellipse cx="82" cy="98" rx="6" ry="6" fill="#fffaef" stroke="#1a0f2a" stroke-width="2"/>
+  <ellipse cx="118" cy="100" rx="5" ry="6" fill="#fffaef" stroke="#1a0f2a" stroke-width="2"/>
+  <ellipse cx="83" cy="100" rx="2.5" ry="3" fill="#c84a8a"/>
+  <ellipse cx="119" cy="102" rx="2.5" ry="3" fill="#c84a8a"/>
+  <circle cx="83.5" cy="99" r="1" fill="#fffaef"/>
+  <!-- nose smudge -->
+  <ellipse cx="100" cy="112" rx="2.5" ry="1.5" fill="#8e6db5" opacity="0.6"/>
+  <!-- wide grin -->
+  <path d="M82 122 Q100 134 118 122" stroke="#1a0f2a" stroke-width="2.6" fill="#3d2562" stroke-linejoin="round"/>
+  <!-- teeth -->
+  <line x1="92" y1="124" x2="92" y2="128" stroke="#1a0f2a" stroke-width="1.5"/>
+  <line x1="100" y1="125" x2="100" y2="129" stroke="#1a0f2a" stroke-width="1.5"/>
+  <line x1="108" y1="124" x2="108" y2="128" stroke="#1a0f2a" stroke-width="1.5"/>
+  <!-- weird cheek glow -->
+  <ellipse cx="74" cy="115" rx="6" ry="3" fill="#c84a8a" opacity="0.35"/>
+  <ellipse cx="126" cy="115" rx="6" ry="3" fill="#c84a8a" opacity="0.35"/>
+</symbol>
+
+<!-- ====== READING-BOOK ACTION (during focus) ====== -->
+<symbol id="action-book" viewBox="0 0 200 280">
+  <g transform="translate(0,0)">
+    <path d="M60 200 L100 196 L140 200 L140 240 L100 244 L60 240 Z" fill="#fffaef" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+    <line x1="100" y1="196" x2="100" y2="244" stroke="#3a2a1c" stroke-width="2"/>
+    <path d="M68 210 L92 208 M68 218 L90 216 M68 226 L92 224" stroke="#a08566" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M108 208 L132 210 M110 216 L132 218 M108 224 L132 226" stroke="#a08566" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <text x="50" y="180" font-size="14" fill="#f3d774" stroke="#3a2a1c" stroke-width="0.5" font-family="Impact, sans-serif">★</text>
+  <text x="148" y="190" font-size="11" fill="#f3d774" stroke="#3a2a1c" stroke-width="0.5" font-family="Impact, sans-serif">★</text>
+  <text x="100" y="172" text-anchor="middle" font-size="13" fill="#f3d774" stroke="#3a2a1c" stroke-width="0.5" font-family="Impact, sans-serif">★</text>
+</symbol>
+
+<!-- ====== SHOP ITEM ICONS ====== -->
+<!-- Powerups -->
+<symbol id="ico-coffee" viewBox="0 0 64 64">
+  <path d="M14 24 L14 48 Q14 54 20 54 L42 54 Q48 54 48 48 L48 24 Z" fill="#fffaef" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M48 30 Q56 30 56 38 Q56 46 48 46" fill="none" stroke="#3a2a1c" stroke-width="2.5"/>
+  <ellipse cx="31" cy="24" rx="16" ry="3" fill="#5a2f1d"/>
+  <path d="M22 18 Q24 14 22 10" stroke="#a08566" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M30 16 Q32 12 30 8" stroke="#a08566" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M38 18 Q40 14 38 10" stroke="#a08566" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <rect x="22" y="38" width="18" height="3" fill="#d97a4a" opacity="0.5"/>
+</symbol>
+
+<symbol id="ico-tonic" viewBox="0 0 64 64">
+  <path d="M26 8 L38 8 L38 22 L48 38 Q50 50 40 56 L24 56 Q14 50 16 38 L26 22 Z" fill="#a8d8c8" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M24 8 L40 8" stroke="#3a2a1c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M16 38 L48 38" stroke="#6e8b73" stroke-width="2" opacity="0.6"/>
+  <circle cx="28" cy="44" r="2" fill="#fffaef" opacity="0.7"/>
+  <circle cx="36" cy="48" r="1.5" fill="#fffaef" opacity="0.7"/>
+  <circle cx="32" cy="40" r="1.2" fill="#fffaef" opacity="0.7"/>
+</symbol>
+
+<symbol id="ico-scroll" viewBox="0 0 64 64">
+  <rect x="12" y="14" width="40" height="36" fill="#fde7c4" stroke="#3a2a1c" stroke-width="2.5" rx="2"/>
+  <path d="M12 14 Q4 14 4 22 Q4 30 12 30 Z" fill="#fde7c4" stroke="#3a2a1c" stroke-width="2.5"/>
+  <path d="M52 50 Q60 50 60 42 Q60 34 52 34 Z" fill="#fde7c4" stroke="#3a2a1c" stroke-width="2.5"/>
+  <path d="M18 24 L42 24" stroke="#3a2a1c" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M18 32 L38 32" stroke="#3a2a1c" stroke-width="1.5" stroke-linecap="round"/>
+  <path d="M18 40 L36 40" stroke="#3a2a1c" stroke-width="1.5" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ico-crystal" viewBox="0 0 64 64">
+  <path d="M32 6 L48 22 L40 56 L24 56 L16 22 Z" fill="#b8d4f0" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M32 6 L24 22 L40 22 Z" fill="#d8e8f8" stroke="#3a2a1c" stroke-width="2"/>
+  <path d="M16 22 L48 22" stroke="#3a2a1c" stroke-width="2"/>
+  <path d="M24 22 L24 56 M40 22 L40 56" stroke="#3a2a1c" stroke-width="1.5" opacity="0.5"/>
+</symbol>
+
+<symbol id="ico-hourglass" viewBox="0 0 64 64">
+  <path d="M14 8 L50 8" stroke="#3a2a1c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M14 56 L50 56" stroke="#3a2a1c" stroke-width="3" stroke-linecap="round"/>
+  <path d="M16 8 Q16 28 32 32 Q48 28 48 8" fill="#fde7c4" stroke="#3a2a1c" stroke-width="2.5"/>
+  <path d="M16 56 Q16 36 32 32 Q48 36 48 56" fill="#fde7c4" stroke="#3a2a1c" stroke-width="2.5"/>
+  <path d="M30 38 L34 38 L33 50 L31 50 Z" fill="#d97a4a"/>
+  <path d="M22 12 Q32 16 42 12" stroke="#d97a4a" stroke-width="2" fill="none" opacity="0.7"/>
+</symbol>
+
+<symbol id="ico-star" viewBox="0 0 64 64">
+  <path d="M32 6 L40 24 L60 26 L44 38 L48 58 L32 48 L16 58 L20 38 L4 26 L24 24 Z" fill="#f3d774" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M28 22 L32 30 L36 22" stroke="#fffaef" stroke-width="2" fill="none" opacity="0.6" stroke-linecap="round"/>
+</symbol>
+
+<!-- Sidekicks -->
+<symbol id="ico-owl" viewBox="0 0 64 64">
+  <path d="M14 22 L20 12 L26 22 Z" fill="#a08566" stroke="#3a2a1c" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M38 22 L44 12 L50 22 Z" fill="#a08566" stroke="#3a2a1c" stroke-width="2" stroke-linejoin="round"/>
+  <ellipse cx="32" cy="38" rx="20" ry="22" fill="#a08566" stroke="#3a2a1c" stroke-width="2.5"/>
+  <path d="M16 36 Q22 50 32 50 Q42 50 48 36" stroke="#7a6448" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="24" cy="34" r="6" fill="#fffaef" stroke="#3a2a1c" stroke-width="2"/>
+  <circle cx="40" cy="34" r="6" fill="#fffaef" stroke="#3a2a1c" stroke-width="2"/>
+  <circle cx="24" cy="34" r="2.5" fill="#3a2a1c"/>
+  <circle cx="40" cy="34" r="2.5" fill="#3a2a1c"/>
+  <path d="M28 42 L32 46 L36 42 Z" fill="#d97a4a" stroke="#3a2a1c" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M22 58 L24 62" stroke="#3a2a1c" stroke-width="2" stroke-linecap="round"/>
+  <path d="M40 58 L42 62" stroke="#3a2a1c" stroke-width="2" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ico-cat" viewBox="0 0 64 64">
+  <path d="M16 22 L20 8 L26 22 Z" fill="#b8b8c4" stroke="#3a2a1c" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M38 22 L44 8 L48 22 Z" fill="#b8b8c4" stroke="#3a2a1c" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M19 14 L21 18 M43 14 L45 18" stroke="#f4a78a" stroke-width="2" stroke-linecap="round"/>
+  <ellipse cx="32" cy="38" rx="20" ry="22" fill="#b8b8c4" stroke="#3a2a1c" stroke-width="2.5"/>
+  <ellipse cx="24" cy="36" rx="3" ry="4" fill="#3a2a1c"/>
+  <ellipse cx="40" cy="36" rx="3" ry="4" fill="#3a2a1c"/>
+  <ellipse cx="32" cy="44" rx="3" ry="2" fill="#f4a78a"/>
+  <path d="M32 46 Q28 50 24 48 M32 46 Q36 50 40 48" stroke="#3a2a1c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M16 42 L8 40 M16 46 L8 48 M48 42 L56 40 M48 46 L56 48" stroke="#3a2a1c" stroke-width="1.5" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ico-dog" viewBox="0 0 64 64">
+  <ellipse cx="32" cy="38" rx="22" ry="20" fill="#d4a574" stroke="#3a2a1c" stroke-width="2.5"/>
+  <path d="M14 28 Q10 14 18 12 Q24 14 22 32 Z" fill="#a07550" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M50 28 Q54 14 46 12 Q40 14 42 32 Z" fill="#a07550" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="24" cy="34" r="3" fill="#3a2a1c"/>
+  <circle cx="40" cy="34" r="3" fill="#3a2a1c"/>
+  <circle cx="24.5" cy="33" r="0.8" fill="#fffaef"/>
+  <circle cx="40.5" cy="33" r="0.8" fill="#fffaef"/>
+  <ellipse cx="32" cy="44" rx="5" ry="3.5" fill="#3a2a1c"/>
+  <path d="M28 50 Q32 53 36 50" stroke="#3a2a1c" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M30 49 Q32 56 32 56" stroke="#f4a78a" stroke-width="2" fill="none" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ico-robot" viewBox="0 0 64 64">
+  <line x1="32" y1="14" x2="32" y2="6" stroke="#3a2a1c" stroke-width="2.5"/>
+  <circle cx="32" cy="6" r="3" fill="#d97a4a" stroke="#3a2a1c" stroke-width="2"/>
+  <rect x="14" y="14" width="36" height="34" fill="#c2c4c8" stroke="#3a2a1c" stroke-width="2.5" rx="6"/>
+  <rect x="20" y="22" width="24" height="10" fill="#1a2a3a" rx="2"/>
+  <circle cx="26" cy="27" r="2.5" fill="#a8d8c8"/>
+  <circle cx="38" cy="27" r="2.5" fill="#a8d8c8"/>
+  <rect x="22" y="38" width="20" height="3" fill="#3a2a1c" rx="1"/>
+  <rect x="20" y="48" width="8" height="10" fill="#a08566" stroke="#3a2a1c" stroke-width="2"/>
+  <rect x="36" y="48" width="8" height="10" fill="#a08566" stroke="#3a2a1c" stroke-width="2"/>
+</symbol>
+
+<symbol id="ico-worm" viewBox="0 0 64 64">
+  <rect x="16" y="14" width="22" height="22" fill="#fde7c4" stroke="#3a2a1c" stroke-width="2.5" rx="2"/>
+  <line x1="27" y1="14" x2="27" y2="36" stroke="#3a2a1c" stroke-width="2"/>
+  <path d="M20 22 L24 22 M30 22 L34 22 M20 28 L24 28 M30 28 L34 28" stroke="#a08566" stroke-width="1.2"/>
+  <path d="M8 50 Q14 38 22 44 Q28 50 38 42 Q46 38 52 44" fill="none" stroke="#6e8b73" stroke-width="10" stroke-linecap="round"/>
+  <path d="M8 50 Q14 38 22 44 Q28 50 38 42 Q46 38 52 44" fill="none" stroke="#3a2a1c" stroke-width="2"/>
+  <circle cx="51" cy="42" r="2" fill="#3a2a1c"/>
+</symbol>
+
+<!-- Relics -->
+<symbol id="ico-tome" viewBox="0 0 64 64">
+  <rect x="12" y="10" width="40" height="46" fill="#5a2f1d" stroke="#3a2a1c" stroke-width="2.5" rx="2"/>
+  <rect x="16" y="14" width="32" height="38" fill="#fde7c4" stroke="#3a2a1c" stroke-width="1.5" rx="1"/>
+  <line x1="32" y1="14" x2="32" y2="52" stroke="#a08566" stroke-width="1"/>
+  <path d="M32 22 L34 26 L38 26 L35 28 L36 32 L32 30 L28 32 L29 28 L26 26 L30 26 Z" fill="#d97a4a" stroke="#3a2a1c" stroke-width="1.2" stroke-linejoin="round"/>
+  <path d="M20 38 L28 38 M20 42 L28 42 M36 38 L44 38 M36 42 L44 42 M20 46 L28 46 M36 46 L44 46" stroke="#a08566" stroke-width="1"/>
+</symbol>
+
+<symbol id="ico-shield" viewBox="0 0 64 64">
+  <path d="M32 6 L52 14 Q52 38 32 58 Q12 38 12 14 Z" fill="#8b9bb4" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M32 6 L42 10 Q42 32 32 50 Q22 32 22 10 Z" fill="#a8b8d0" stroke="#3a2a1c" stroke-width="1.5" opacity="0.7"/>
+  <path d="M32 18 L34 26 L42 26 L36 30 L38 38 L32 34 L26 38 L28 30 L22 26 L30 26 Z" fill="#fffaef" stroke="#3a2a1c" stroke-width="2" stroke-linejoin="round"/>
+</symbol>
+
+<symbol id="ico-compass" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="22" fill="#fde7c4" stroke="#3a2a1c" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#3a2a1c" stroke-width="1" stroke-dasharray="2 3" opacity="0.5"/>
+  <path d="M32 14 L36 32 L32 50 L28 32 Z" fill="#d97a4a" stroke="#3a2a1c" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M32 14 L36 32 L32 32 Z" fill="#c84a3a" stroke="#3a2a1c" stroke-width="1.5"/>
+  <circle cx="32" cy="32" r="2.5" fill="#3a2a1c"/>
+  <text x="32" y="13" text-anchor="middle" font-size="6" fill="#3a2a1c" font-weight="bold" font-family="Arial">N</text>
+</symbol>
+
+<symbol id="ico-sigil" viewBox="0 0 64 64">
+  <path d="M32 6 L56 24 L48 56 L16 56 L8 24 Z" fill="#3a2a6b" stroke="#1f1740" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="32" cy="34" r="12" fill="none" stroke="#f3d774" stroke-width="2"/>
+  <path d="M32 26 L34 30 L38 30 L35 33 L36 38 L32 35 L28 38 L29 33 L26 30 L30 30 Z" fill="#f3d774" stroke="#1f1740" stroke-width="1"/>
+</symbol>
+
+<symbol id="ico-banner" viewBox="0 0 64 64">
+  <line x1="14" y1="6" x2="14" y2="58" stroke="#3a2a1c" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="14" cy="6" r="2.5" fill="#a08566" stroke="#3a2a1c" stroke-width="1.5"/>
+  <path d="M14 10 L52 10 L46 22 L52 34 L14 34 Z" fill="#d97a4a" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M28 18 L32 28 L36 18" stroke="#fffaef" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="22" y1="22" x2="42" y2="22" stroke="#fffaef" stroke-width="1.5" opacity="0.6"/>
+</symbol>
+
+<!-- Decorations -->
+<symbol id="ico-bulb" viewBox="0 0 64 64">
+  <path d="M32 8 Q18 8 18 22 Q18 32 26 38 L26 44 L38 44 L38 38 Q46 32 46 22 Q46 8 32 8 Z" fill="#f3d774" stroke="#3a2a1c" stroke-width="2.5"/>
+  <path d="M22 18 Q26 14 32 14" stroke="#fffaef" stroke-width="2" fill="none" opacity="0.7" stroke-linecap="round"/>
+  <rect x="26" y="46" width="12" height="6" fill="#a08566" stroke="#3a2a1c" stroke-width="2"/>
+  <line x1="26" y1="49" x2="38" y2="49" stroke="#3a2a1c" stroke-width="1"/>
+  <rect x="28" y="54" width="8" height="3" fill="#3a2a1c"/>
+  <path d="M8 22 L14 22 M50 22 L56 22" stroke="#f3d774" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M14 8 L18 12 M50 12 L46 12" stroke="#f3d774" stroke-width="2.5" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ico-window" viewBox="0 0 64 64">
+  <rect x="8" y="10" width="48" height="44" fill="#a8d8e8" stroke="#3a2a1c" stroke-width="2.5" rx="2"/>
+  <rect x="8" y="10" width="48" height="44" fill="none" stroke="#3a2a1c" stroke-width="2.5" rx="2"/>
+  <line x1="32" y1="10" x2="32" y2="54" stroke="#3a2a1c" stroke-width="2.5"/>
+  <line x1="8" y1="32" x2="56" y2="32" stroke="#3a2a1c" stroke-width="2.5"/>
+  <circle cx="44" cy="20" r="4" fill="#fffaef" opacity="0.85"/>
+  <circle cx="48" cy="22" r="2.5" fill="#fffaef" opacity="0.85"/>
+  <path d="M14 50 Q20 44 26 50" stroke="#6e8b73" stroke-width="2" fill="none" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ico-trophy" viewBox="0 0 64 64">
+  <path d="M18 10 L46 10 L44 30 Q44 42 32 42 Q20 42 20 30 Z" fill="#f3d774" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M18 14 Q8 14 8 22 Q8 30 18 32" fill="none" stroke="#3a2a1c" stroke-width="2.5"/>
+  <path d="M46 14 Q56 14 56 22 Q56 30 46 32" fill="none" stroke="#3a2a1c" stroke-width="2.5"/>
+  <path d="M28 20 L30 24 L34 24 L31 27 L32 31 L28 28 L24 31 L25 27 L22 24 L26 24 Z" fill="#d97a4a" stroke="#3a2a1c" stroke-width="1" stroke-linejoin="round"/>
+  <rect x="26" y="42" width="12" height="6" fill="#3a2a1c"/>
+  <rect x="20" y="48" width="24" height="8" fill="#a08566" stroke="#3a2a1c" stroke-width="2.5" rx="1"/>
+</symbol>
+
+<symbol id="ico-plant" viewBox="0 0 64 64">
+  <path d="M32 36 Q22 18 14 22 Q18 34 32 36 Z" fill="#6e8b73" stroke="#3a2a1c" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M32 36 Q42 18 50 22 Q46 34 32 36 Z" fill="#6e8b73" stroke="#3a2a1c" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M32 36 Q30 18 36 8 Q36 24 32 36 Z" fill="#94c47d" stroke="#3a2a1c" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M16 38 L48 38 L44 56 L20 56 Z" fill="#a08566" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <line x1="20" y1="44" x2="44" y2="44" stroke="#7a6448" stroke-width="1.5"/>
+</symbol>
+
+<symbol id="ico-lamp" viewBox="0 0 64 64">
+  <path d="M16 8 L48 8 L40 28 L24 28 Z" fill="#f3d774" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M22 14 Q26 10 32 10" stroke="#fffaef" stroke-width="2" fill="none" opacity="0.7" stroke-linecap="round"/>
+  <line x1="32" y1="28" x2="32" y2="48" stroke="#3a2a1c" stroke-width="3"/>
+  <ellipse cx="32" cy="54" rx="14" ry="4" fill="#a08566" stroke="#3a2a1c" stroke-width="2.5"/>
+  <ellipse cx="32" cy="52" rx="10" ry="2" fill="#7a6448" opacity="0.5"/>
+</symbol>
+
+<symbol id="ico-clock" viewBox="0 0 64 64">
+  <circle cx="32" cy="32" r="22" fill="#fffaef" stroke="#3a2a1c" stroke-width="2.5"/>
+  <circle cx="32" cy="32" r="18" fill="none" stroke="#3a2a1c" stroke-width="1" opacity="0.3"/>
+  <line x1="32" y1="14" x2="32" y2="17" stroke="#3a2a1c" stroke-width="2"/>
+  <line x1="32" y1="47" x2="32" y2="50" stroke="#3a2a1c" stroke-width="2"/>
+  <line x1="14" y1="32" x2="17" y2="32" stroke="#3a2a1c" stroke-width="2"/>
+  <line x1="47" y1="32" x2="50" y2="32" stroke="#3a2a1c" stroke-width="2"/>
+  <line x1="32" y1="32" x2="32" y2="20" stroke="#3a2a1c" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="32" y1="32" x2="42" y2="36" stroke="#3a2a1c" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="32" cy="32" r="2.5" fill="#d97a4a" stroke="#3a2a1c" stroke-width="1"/>
+</symbol>
+
+<!-- chrome icons -->
+<symbol id="ico-brain" viewBox="0 0 64 64">
+  <path d="M22 14 Q14 14 14 24 Q8 28 12 36 Q10 42 16 46 Q16 54 26 54 Q30 58 34 54 Q44 56 48 50 Q54 50 54 42 Q58 36 52 30 Q54 22 46 18 Q42 12 34 14 Q28 10 22 14 Z" fill="#f4a78a" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M32 18 L32 50 M22 24 Q28 28 32 24 Q36 28 42 24 M22 36 Q28 40 32 36 Q36 40 42 36" stroke="#3a2a1c" stroke-width="1.5" fill="none" opacity="0.7" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ico-bolt" viewBox="0 0 64 64">
+  <path d="M36 4 L14 36 L28 36 L24 60 L50 26 L36 26 Z" fill="#f3d774" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M30 14 L22 26" stroke="#fffaef" stroke-width="2" opacity="0.7" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ico-home" viewBox="0 0 64 64">
+  <path d="M8 30 L32 8 L56 30 L52 30 L52 54 L36 54 L36 38 L28 38 L28 54 L12 54 L12 30 Z" fill="#fffaef" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+</symbol>
+
+<symbol id="ico-sword" viewBox="0 0 64 64">
+  <path d="M32 4 L36 6 L36 38 L32 42 L28 38 L28 6 Z" fill="#c2c4c8" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="22" y="38" width="20" height="6" fill="#a08566" stroke="#3a2a1c" stroke-width="2.5" rx="1"/>
+  <rect x="29" y="44" width="6" height="14" fill="#5a3a22" stroke="#3a2a1c" stroke-width="2" rx="1"/>
+  <circle cx="32" cy="60" r="3" fill="#d97a4a" stroke="#3a2a1c" stroke-width="2"/>
+</symbol>
+
+<symbol id="ico-bag" viewBox="0 0 64 64">
+  <path d="M14 22 L50 22 L48 56 L16 56 Z" fill="#d97a4a" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M22 22 Q22 12 32 12 Q42 12 42 22" fill="none" stroke="#3a2a1c" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="24" cy="34" r="2" fill="#3a2a1c"/>
+  <circle cx="40" cy="34" r="2" fill="#3a2a1c"/>
+</symbol>
+
+<symbol id="ico-box" viewBox="0 0 64 64">
+  <path d="M8 22 L32 10 L56 22 L56 50 L32 60 L8 50 Z" fill="#a08566" stroke="#3a2a1c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M8 22 L32 32 L56 22 M32 32 L32 60" stroke="#3a2a1c" stroke-width="2"/>
+  <path d="M22 16 L22 38 L32 32 L32 14" fill="#7a6448" opacity="0.4"/>
+</symbol>
+
+<symbol id="ico-arrow-back" viewBox="0 0 64 64">
+  <path d="M40 16 L24 32 L40 48" stroke="#3a2a1c" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+
+<symbol id="ico-x" viewBox="0 0 64 64">
+  <path d="M16 16 L48 48 M48 16 L16 48" stroke="#3a2a1c" stroke-width="4" stroke-linecap="round"/>
+</symbol>
+
+<symbol id="ico-check" viewBox="0 0 64 64">
+  <path d="M14 32 L26 46 L50 18" stroke="#3a2a1c" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+
+<symbol id="ico-arrow-up" viewBox="0 0 64 64">
+  <path d="M16 40 L32 24 L48 40" stroke="#3a2a1c" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<symbol id="ico-arrow-down" viewBox="0 0 64 64">
+  <path d="M16 24 L32 40 L48 24" stroke="#3a2a1c" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<symbol id="ico-arrow-left" viewBox="0 0 64 64">
+  <path d="M40 16 L24 32 L40 48" stroke="#3a2a1c" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<symbol id="ico-arrow-right" viewBox="0 0 64 64">
+  <path d="M24 16 L40 32 L24 48" stroke="#3a2a1c" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+
+<symbol id="ico-mask" viewBox="0 0 64 64">
+  <!-- chaotic masked face for Mr. 67 nav button -->
+  <ellipse cx="32" cy="34" rx="20" ry="22" fill="#b89cd9" stroke="#3a2a1c" stroke-width="2.5"/>
+  <text x="32" y="20" text-anchor="middle" font-family="Impact, Arial Black, sans-serif" font-size="9" font-weight="900" fill="#3a2a1c" letter-spacing="-0.5">67</text>
+  <ellipse cx="24" cy="34" rx="3" ry="3.5" fill="#fffaef" stroke="#3a2a1c" stroke-width="1.5"/>
+  <ellipse cx="40" cy="34" rx="3" ry="3.5" fill="#fffaef" stroke="#3a2a1c" stroke-width="1.5"/>
+  <circle cx="24" cy="34" r="1.2" fill="#c84a8a"/>
+  <circle cx="40" cy="34" r="1.2" fill="#c84a8a"/>
+  <path d="M24 44 Q32 50 40 44" stroke="#3a2a1c" stroke-width="2" fill="none" stroke-linecap="round"/>
+</symbol>
+
+</svg>
+
+<!-- ========== APP ROOT ========== -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-icon" aria-hidden="true"><use href="#ico-brain"/></svg>
+      <div class="brand-text">
+        <div class="brand-title">Mr. Interesting</div>
+        <div class="brand-sub">vs. Mr. 67</div>
+      </div>
+    </div>
+    <div class="wallet">
+      <div class="coin" title="Brain Cells">
+        <svg class="coin-icon" aria-hidden="true"><use href="#ico-brain"/></svg>
+        <span id="brainCellsCount">0</span>
+      </div>
+      <div class="coin" title="Aura">
+        <svg class="coin-icon" aria-hidden="true"><use href="#ico-bolt"/></svg>
+        <span id="auraCount">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ROOM SCREEN -->
+  <main id="screen-room" class="screen active">
+
+    <div class="world-meter" id="worldMeter">
+      <div class="meter-top">
+        <span class="meter-label-text">World Focus</span>
+        <span class="meter-value" id="meterValueText">50 / 100</span>
+      </div>
+      <div class="meter-bar">
+        <div class="meter-fill" id="meterFill"></div>
+      </div>
+      <div class="meter-poles">
+        <span class="pole hero-pole">Mr. Interesting</span>
+        <span class="pole villain-pole">Mr. 67</span>
+      </div>
+    </div>
+
+    <div class="stats-row" id="statsRow">
+      <div class="stat">
+        <div class="stat-num" id="statSessions">0</div>
+        <div class="stat-label">battles won</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statMinutes">0</div>
+        <div class="stat-label">min focused</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="statItems">0</div>
+        <div class="stat-label">items owned</div>
+      </div>
+    </div>
+
+    <div class="room-wrap">
+      <div id="room" class="room">
+        <div class="room-floor"></div>
+        <div class="room-wall"></div>
+        <div id="placedItems" class="placed-items"></div>
+
+        <div id="hero" class="character hero" data-skin="classic"></div>
+        <div id="mr67" class="character villain"></div>
+
+        <div id="heroSpeech" class="speech-bubble hero-bubble hidden">Hi!</div>
+        <div id="villainSpeech" class="speech-bubble villain-bubble hidden">6-7</div>
+      </div>
+
+      <div class="hero-name-row">
+        <span id="heroNameDisplay" class="hero-name">Mr. Interesting</span>
+        <button class="link-btn" id="renameBtn">rename</button>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="primary-btn" id="startFocusBtn">
+        <svg class="btn-icon" aria-hidden="true"><use href="#ico-sword"/></svg>
+        <span>Begin Focus Battle</span>
+      </button>
+    </div>
+  </main>
+
+  <!-- FOCUS SCREEN -->
+  <main id="screen-focus" class="screen">
+    <div class="focus-wrap">
+
+      <button class="back-btn" id="backFromFocus">
+        <svg class="back-icon" aria-hidden="true"><use href="#ico-arrow-back"/></svg>
+        <span>Back</span>
+      </button>
+
+      <div class="focus-stage">
+        <div class="focus-character">
+          <div class="character hero focus-mode" id="focusCharacter" data-skin="classic"></div>
+        </div>
+        <div class="focus-villain" id="focusVillain"></div>
+      </div>
+
+      <div class="timer-display">
+        <div id="timerText" class="timer-text">25:00</div>
+        <div class="timer-sub" id="timerSub">stay focused — Mr. 67 is shaking</div>
+        <div id="lockBadge" class="lock-badge hidden">
+          <svg aria-hidden="true"><use href="#ico-shield"/></svg>
+          <span>Focus locked — phone pinned</span>
+        </div>
+      </div>
+
+      <div class="duration-picker" id="durationPicker">
+        <button class="chip" data-min="5">5</button>
+        <button class="chip" data-min="15">15</button>
+        <button class="chip selected" data-min="25">25</button>
+        <button class="chip" data-min="45">45</button>
+        <button class="chip" data-min="60">60</button>
+        <button class="chip" data-min="90">90</button>
+        <button class="chip" data-min="120">120</button>
+      </div>
+
+      <div class="mode-toggle">
+        <label class="switch">
+          <input type="checkbox" id="pomodoroToggle" />
+          <span class="slider"></span>
+        </label>
+        <span class="mode-label">Pomodoro breaks (5 min)</span>
+      </div>
+
+      <div class="focus-actions">
+        <button class="primary-btn" id="beginBtn">Begin the Battle</button>
+        <button class="ghost-btn hidden" id="cancelBtn">Surrender</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- SHOP SCREEN -->
+  <main id="screen-shop" class="screen">
+    <div class="page-header">
+      <h2>The Shop</h2>
+      <p class="muted">Trade brain cells for tools to fight brainrot</p>
+    </div>
+    <div class="shop-tabs">
+      <button class="tab selected" data-cat="all">All</button>
+      <button class="tab" data-cat="powerup">Powerups</button>
+      <button class="tab" data-cat="sidekick">Sidekicks</button>
+      <button class="tab" data-cat="relic">Relics</button>
+      <button class="tab" data-cat="decor">Decor</button>
+      <button class="tab" data-cat="skin">Outfits</button>
+    </div>
+    <div id="shopGrid" class="shop-grid"></div>
+  </main>
+
+  <!-- INVENTORY SCREEN -->
+  <main id="screen-inventory" class="screen">
+    <div class="page-header">
+      <h2>Your Items</h2>
+      <p class="muted">Tap to place — or remove and put back in the bag</p>
+    </div>
+    <div id="inventoryGrid" class="shop-grid"></div>
+  </main>
+
+  <!-- HERO SCREEN -->
+  <main id="screen-edit" class="screen">
+    <div class="page-header">
+      <h2>Hero Outfits</h2>
+      <p class="muted">Equip an outfit you've collected</p>
+    </div>
+    <div id="skinGrid" class="shop-grid"></div>
+    <div class="danger-zone">
+      <button class="ghost-btn danger" id="resetBtn">Reset All Progress</button>
+    </div>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-screen="room">
+      <svg class="nav-svg" aria-hidden="true"><use href="#ico-home"/></svg>
+      <span class="nav-label">Room</span>
+    </button>
+    <button class="nav-btn" data-screen="focus">
+      <svg class="nav-svg" aria-hidden="true"><use href="#ico-sword"/></svg>
+      <span class="nav-label">Battle</span>
+    </button>
+    <button class="nav-btn" data-screen="shop">
+      <svg class="nav-svg" aria-hidden="true"><use href="#ico-bag"/></svg>
+      <span class="nav-label">Shop</span>
+    </button>
+    <button class="nav-btn" data-screen="inventory">
+      <svg class="nav-svg" aria-hidden="true"><use href="#ico-box"/></svg>
+      <span class="nav-label">Items</span>
+    </button>
+    <button class="nav-btn" data-screen="edit">
+      <svg class="nav-svg" aria-hidden="true"><use href="#ico-brain"/></svg>
+      <span class="nav-label">Hero</span>
+    </button>
+  </nav>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <h3 id="modalTitle">Title</h3>
+      <p id="modalText">Text</p>
+      <input type="text" id="modalInput" class="hidden" />
+      <div class="modal-actions">
+        <button class="ghost-btn" id="modalCancel">Cancel</button>
+        <button class="primary-btn" id="modalConfirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+</div>
+
+<script src="state-helpers.js"></script>
+<script src="native-bridge.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
