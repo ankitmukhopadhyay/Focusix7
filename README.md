@@ -112,5 +112,5 @@ Tests:       283 passed, 283 total
 ## License
 
 All rights reserved — see [LICENSE](LICENSE). Source is provided for viewing
-and portfolio/review purposes; the official app is distributed on Google Play
+and portfolio/review purposes; the official app is distributed for closed testing as of now, on Google Play
 (link above).
