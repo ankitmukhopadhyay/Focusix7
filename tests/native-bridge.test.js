@@ -74,11 +74,11 @@ describe("NativeBridge with stubbed Capacitor", () => {
     expect(window.NativeBridge.isNative()).toBe(true);
   });
   test("requestFocusLock forwards minutes/label and reports native:true", async () => {
-    const res = await window.NativeBridge.requestFocusLock(45, "Pomodoro");
+    const res = await window.NativeBridge.requestFocusLock(45, "FocusSession");
     expect(res.native).toBe(true);
     expect(res.lockRequested).toBe(true);
     expect(res.minutes).toBe(45);
-    expect(res.label).toBe("Pomodoro");
+    expect(res.label).toBe("FocusSession");
   });
   test("requestFocusLock falls back to a sensible default when minutes is 0", async () => {
     const res = await window.NativeBridge.requestFocusLock(0, "weird");

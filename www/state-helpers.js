@@ -70,6 +70,16 @@
 
     if (LEGACY_SKIN[s.skin]) s.skin = LEGACY_SKIN[s.skin];
 
+    // Skin curation: if the user's equipped skin was REMOVED in this update,
+    // fall back to the classic look so their hero doesn't render blank.
+    // (Their owned-items list is preserved untouched — any phantom IDs are
+    //  ignored by the rest of the app because ITEM_BY_ID lookup returns
+    //  undefined for them.)
+    if (validItemIds.size > 0 && typeof s.skin === "string" &&
+        !validItemIds.has("skin_" + s.skin)) {
+      s.skin = "classic";
+    }
+
     if (Array.isArray(s.ownedItems)) {
       s.ownedItems = s.ownedItems
         .map(id => LEGACY_OWNED_ITEM[id] || id)
@@ -92,24 +102,109 @@
   }
 
   /**
-   * Apply the reward for a successful focus session. Mutates state and returns
-   * { banished } — `banished` is true if this session pushed the meter to 100.
+   * Identity buffs — represents "no items placed". Used as the default for
+   * applyFocusReward / applyGiveUp so existing callers (and the test suite)
+   * see the original 1:1 reward math.
    */
-  function applyFocusReward(state, minutes) {
-    const min = Math.max(0, Math.floor(minutes || 0));
-    state.brainCells = (state.brainCells || 0) + min;
-    state.totalFocusMinutes = (state.totalFocusMinutes || 0) + min;
-    if (min >= AURA_THRESHOLD_MIN) state.aura = (state.aura || 0) + 1;
-    state.sessionsCompleted = (state.sessionsCompleted || 0) + 1;
-    const prev = state.worldFocus != null ? state.worldFocus : 50;
-    state.worldFocus = clamp(prev + FOCUS_WORLD_DELTA, WORLD_MIN, WORLD_MAX);
-    return { banished: state.worldFocus >= WORLD_MAX && prev < WORLD_MAX };
+  const IDENTITY_BUFFS = Object.freeze({
+    brainCellMult: 1,
+    auraBonus: 0,
+    worldFocusBonus: 0,
+    giveUpPenaltyMult: 1,
+    doubleChance: 0,
+  });
+
+  /**
+   * Compute the active buffs from a state's OWNED items + an item catalog.
+   *   - brainCellMult     : ADDITIVE (each item contributes +X%; total = 1 + sum).
+   *                          Prevents runaway compounding from many items.
+   *   - auraBonus / worldFocusBonus : ADDITIVE.
+   *   - giveUpPenaltyMult : MULTIPLICATIVE (each item keeps X% of remaining penalty).
+   *   - doubleChance      : MAX (one strongest item wins).
+   *
+   * `catalog` is a map of itemId → item (each item may carry a `buff` object).
+   * Buffs activate the moment a user OWNS the item (not when placed). Placement
+   * is purely cosmetic. Pure function: never mutates state or catalog.
+   */
+  function computeBuffs(state, catalog) {
+    const out = {
+      brainCellMult: 1,
+      auraBonus: 0,
+      worldFocusBonus: 0,
+      giveUpPenaltyMult: 1,
+      doubleChance: 0,
+    };
+    if (!state || !catalog) return out;
+    // Prefer ownedItems (canonical). Fall back to placed for legacy callers.
+    let ids = [];
+    if (Array.isArray(state.ownedItems)) ids = state.ownedItems;
+    else if (state.placed && typeof state.placed === "object") ids = Object.keys(state.placed);
+    let cellAdd = 0; // accumulated +% (additive)
+    for (const id of ids) {
+      const item = catalog[id];
+      if (!item || !item.buff) continue;
+      const b = item.buff;
+      if (typeof b.brainCellMult === "number" && b.brainCellMult > 0) {
+        cellAdd += (b.brainCellMult - 1);
+      }
+      if (typeof b.auraBonus === "number")         out.auraBonus         += b.auraBonus;
+      if (typeof b.worldFocusBonus === "number")   out.worldFocusBonus   += b.worldFocusBonus;
+      if (typeof b.giveUpPenaltyMult === "number") out.giveUpPenaltyMult *= b.giveUpPenaltyMult;
+      if (typeof b.doubleChance === "number")      out.doubleChance       = Math.max(out.doubleChance, b.doubleChance);
+    }
+    out.brainCellMult = 1 + Math.max(0, cellAdd);
+    return out;
   }
 
-  /** Apply give-up penalty. Mutates and returns the new worldFocus value. */
-  function applyGiveUp(state) {
+  /**
+   * Apply the reward for a successful focus session. Mutates state and returns
+   * { banished, awardedCells, awardedAura } — `banished` is true if this
+   * session pushed the meter to 100.
+   * `buffs` is optional and defaults to identity, preserving the original 1:1
+   * math for existing callers / tests that don't pass any buffs.
+   */
+  function applyFocusReward(state, minutes, buffs) {
+    const b = buffs || IDENTITY_BUFFS;
+    const min = Math.max(0, Math.floor(minutes || 0));
+    // Base cells = minutes × brainCellMult, rounded down. Identity mult keeps the
+    // pre-existing math (5 min → 5 cells) so existing tests stay green.
+    let cells = Math.floor(min * (b.brainCellMult || 1));
+    if (b.doubleChance && Math.random() < b.doubleChance) cells *= 2;
+    state.brainCells = (state.brainCells || 0) + cells;
+    state.totalFocusMinutes = (state.totalFocusMinutes || 0) + min;
+    let auraGain = 0;
+    // Aura only flows on sessions that hit the threshold (the base game's
+    // 60-min rule). When the session qualifies, item buffs ADD on top.
+    if (min >= AURA_THRESHOLD_MIN) {
+      auraGain += 1;
+      if (b.auraBonus) auraGain += Math.max(0, Math.floor(b.auraBonus));
+    }
+    if (auraGain > 0) state.aura = (state.aura || 0) + auraGain;
+    state.sessionsCompleted = (state.sessionsCompleted || 0) + 1;
     const prev = state.worldFocus != null ? state.worldFocus : 50;
-    state.worldFocus = clamp(prev + GIVEUP_WORLD_DELTA, WORLD_MIN, WORLD_MAX);
+    // World-focus delta scales with the focus duration: floor(minutes / 2).
+    // So 5 min → 2, 10 min → 5, 60 min → 30, 120 min → 60.
+    // Any worldFocusBonus from owned powerups still stacks ADDITIVELY on top.
+    const baseDelta = Math.floor(min / 2);
+    const delta = baseDelta + Math.max(0, Math.floor(b.worldFocusBonus || 0));
+    state.worldFocus = clamp(prev + delta, WORLD_MIN, WORLD_MAX);
+    return {
+      banished: state.worldFocus >= WORLD_MAX && prev < WORLD_MAX,
+      awardedCells: cells,
+      awardedAura: auraGain,
+    };
+  }
+
+  /**
+   * Apply give-up penalty. Mutates and returns the new worldFocus value.
+   * `buffs` optional — `giveUpPenaltyMult: 0.5` means only half the penalty.
+   */
+  function applyGiveUp(state, buffs) {
+    const b = buffs || IDENTITY_BUFFS;
+    const prev = state.worldFocus != null ? state.worldFocus : 50;
+    const mult = b.giveUpPenaltyMult != null ? b.giveUpPenaltyMult : 1;
+    const delta = Math.floor(GIVEUP_WORLD_DELTA * mult);
+    state.worldFocus = clamp(prev + delta, WORLD_MIN, WORLD_MAX);
     return state.worldFocus;
   }
 
@@ -140,10 +235,12 @@
     WORLD_MAX,
     LEGACY_SKIN,
     LEGACY_OWNED_ITEM,
+    IDENTITY_BUFFS,
     migrateState,
     applyFocusReward,
     applyGiveUp,
     applyBanishReward,
+    computeBuffs,
     formatTimer,
     clone,
     clamp,

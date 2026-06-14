@@ -94,9 +94,18 @@ public final class FocusOverlay {
         float density = ctx.getResources().getDisplayMetrics().density;
 
         FrameLayout root = new FrameLayout(ctx);
-        root.setBackgroundColor(0xEE2E1F12); // warm dark with alpha
+        root.setBackgroundColor(0xF0100620); // dark purple matches --bg-soft
         root.setClickable(true);
+        root.setLongClickable(true);
         root.setFocusable(true);
+        root.setFocusableInTouchMode(true);
+        // Consume EVERY touch event on the backdrop so no tap can slip through
+        // to the underlying app. Only the button's own click listener will run.
+        root.setOnTouchListener((v, ev) -> true);
+        // Block the back button from dismissing — only the CTA may close us.
+        root.setOnKeyListener((v, keyCode, ev) -> {
+            return keyCode == android.view.KeyEvent.KEYCODE_BACK;
+        });
 
         LinearLayout card = new LinearLayout(ctx);
         card.setOrientation(LinearLayout.VERTICAL);
@@ -105,8 +114,9 @@ public final class FocusOverlay {
         card.setPadding(padding, padding, padding, padding);
 
         GradientDrawable bg = new GradientDrawable();
-        bg.setColor(0xFFFFFAEF);
-        bg.setCornerRadius(dp(22, density));
+        bg.setColor(0xFF15082A); // dark purple panel
+        bg.setCornerRadius(dp(14, density));
+        bg.setStroke(dp(3, density), 0xFF000000); // comic-style thick black border
         card.setBackground(bg);
 
         FrameLayout.LayoutParams cardLp = new FrameLayout.LayoutParams(
@@ -117,17 +127,18 @@ public final class FocusOverlay {
         cardLp.leftMargin = cardLp.rightMargin = dp(28, density);
 
         TextView title = new TextView(ctx);
-        title.setText("Focus mode is on");
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+        title.setText("MR. 67 WANTS YOU DISTRACTED!");
+        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
         title.setTypeface(Typeface.DEFAULT_BOLD);
-        title.setTextColor(0xFF2E1F12);
+        title.setTextColor(0xFFFF00AA); // neon magenta — villain colour
         title.setGravity(Gravity.CENTER);
+        title.setLetterSpacing(0.06f);
 
         TextView body = new TextView(ctx);
-        body.setText("Mr. 67 wants you scrolling — but the timer's still running. " +
-                     "Return to Focusix7 to finish the battle.");
+        body.setText("Don't let him win. Tap below to crush the distraction and " +
+                     "return to your focus session.");
         body.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        body.setTextColor(0xFF5A4332);
+        body.setTextColor(0xFFC5C9E0);
         body.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams bodyLp = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -136,14 +147,17 @@ public final class FocusOverlay {
 
         Button btn = new Button(ctx);
         btn.setText("Back to Focusix7");
-        btn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-        btn.setAllCaps(false);
+        btn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+        btn.setAllCaps(true); // displayed UPPERCASE for comic-book punch
         btn.setTextColor(Color.WHITE);
         btn.setTypeface(Typeface.DEFAULT_BOLD);
         GradientDrawable btnBg = new GradientDrawable();
-        btnBg.setColor(0xFFD97A4A);
-        btnBg.setCornerRadius(dp(18, density));
+        btnBg.setColor(0xFF00D4FF); // solid neon cyan — comic button
+        btnBg.setCornerRadius(dp(999, density));
+        btnBg.setStroke(dp(3, density), 0xFF000000); // bold black border
         btn.setBackground(btnBg);
+        btn.setTextColor(0xFF000000); // black on cyan for comic punch
+        btn.setLetterSpacing(0.06f);
         LinearLayout.LayoutParams btnLp = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, dp(52, density));
         btnLp.topMargin = dp(22, density);

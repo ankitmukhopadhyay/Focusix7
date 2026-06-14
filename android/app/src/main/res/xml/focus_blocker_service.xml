@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Focusix7 is NOT an assistive accessibility tool (i.e. it is not designed
+  to help users with disabilities operate their device). It uses the
+  Accessibility Service API solely to detect foreground-app transitions
+  during a focus session for distraction blocking. The isAccessibilityTool
+  attribute must therefore be explicitly set to "false" so Play Console
+  treats the app as a non-tool consumer of the API.
+-->
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:accessibilityEventTypes="typeWindowStateChanged"
     android:accessibilityFeedbackType="feedbackGeneric"
@@ -6,4 +14,5 @@
     android:canRetrieveWindowContent="true"
     android:accessibilityFlags="flagIncludeNotImportantViews|flagRetrieveInteractiveWindows"
     android:settingsActivity="io.focusix7.app.MainActivity"
-    android:description="@string/accessibility_description" />
+    android:description="@string/accessibility_description"
+    android:isAccessibilityTool="false" />

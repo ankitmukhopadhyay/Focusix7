@@ -83,6 +83,28 @@
       try { return Object.assign({ native: true }, await pl.getState()); }
       catch (_) { return { inLockTaskMode: false, supported: false, native: true }; }
     },
+
+    async setUnblockList(packages) {
+      const arr = Array.isArray(packages) ? packages.map(String) : [];
+      const pl = this._plugin();
+      if (!pl) return { ok: true, native: false, count: arr.length };
+      try { return Object.assign({ native: true }, await pl.setUnblockList({ packages: arr })); }
+      catch (e) { return { ok: false, native: true, error: String(e) }; }
+    },
+
+    async getUnblockList() {
+      const pl = this._plugin();
+      if (!pl) return { packages: [], native: false };
+      try { return Object.assign({ native: true }, await pl.getUnblockList()); }
+      catch (_) { return { packages: [], native: true }; }
+    },
+
+    async listInstalledApps() {
+      const pl = this._plugin();
+      if (!pl) return { apps: [], native: false };
+      try { return Object.assign({ native: true }, await pl.listInstalledApps()); }
+      catch (e) { return { apps: [], native: true, error: String(e) }; }
+    },
   };
 
   global.NativeBridge = NativeBridge;
