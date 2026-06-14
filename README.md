@@ -5,7 +5,7 @@ Interesting** weakens the brainrot villain **Mr. 67**; giving up makes him
 stronger. Earn brain cells and aura, buy outfits and passive buffs, and push
 the World Focus meter to 100 to banish Mr. 67 — then do it again.
 
-**Get the app on Google Play:**
+**Closed testing is live - _Invitation only through email_:**
 
 [![Get it on Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=io.focusix7.app)
 
