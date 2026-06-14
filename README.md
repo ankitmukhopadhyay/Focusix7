@@ -84,7 +84,7 @@ timer keeps running with the screen off.
 | `VIBRATE` | UI feedback |
 
 No analytics, no accounts, no data leaves the device — see the
-[privacy policy](https://github.com/ankitmukhopadhyay/focusix7-privacy).
+[privacy policy](https://ankitmukhopadhyay.github.io/focusix7-privacy/privacy.html).
 
 ## Test suite
 
