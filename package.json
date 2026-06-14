@@ -1,0 +1,25 @@
+{
+  "name": "focusix7",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mr. Interesting vs Mr. 67 — focus app",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "sync": "cap sync android",
+    "copy": "cap copy android",
+    "build:android": "cap copy android && cd android && ./gradlew --no-daemon assembleDebug",
+    "build:android:release": "cap copy android && cd android && ./gradlew --no-daemon assembleRelease",
+    "verify": "npm test && npm run build:android"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^25.0.0"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  }
+}

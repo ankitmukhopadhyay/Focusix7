@@ -1,0 +1,3558 @@
+/* Mr. Interesting vs Mr. 67 — Neon Edition */
+
+:root {
+  --bg-soft: #100620;
+  --bg-warm: #1a0a30;
+  --bg-cream: #0a0416;
+  --wall: #15082a;
+  --wall-shadow: #2a1840;
+  --floor: #0a0418;
+  --floor-dark: #05020e;
+
+  --primary: #00d4ff;
+  --primary-dark: #0099bb;
+  --primary-light: #66eaff;
+  --accent: #00ff88;
+  --accent-dark: #00cc66;
+
+  --text: #e0e8ff;
+  --text-soft: #8090b0;
+  --muted: #405070;
+  --card: #0d0d1e;
+  --card-shadow: rgba(0, 212, 255, 0.07);
+  --card-deep: rgba(0, 0, 0, 0.55);
+  --divider: rgba(0, 212, 255, 0.12);
+
+  --villain: #bf00ff;
+  --villain-dark: #8800cc;
+  --villain-glow: #ff00aa;
+  --villain-text: #f0d0ff;
+
+  --meter-good: #00d4ff;
+  --meter-neutral: #ffcc00;
+  --meter-bad: #ff006e;
+
+  --neon-cyan:   #00d4ff;
+  --neon-purple: #bf00ff;
+  --neon-green:  #00ff88;
+  --neon-pink:   #ff006e;
+  --neon-orange: #ff7700;
+  --neon-yellow: #ffcc00;
+
+  /* RGB triplets — used inside rgba() so the focus-screen energy field,
+     speech-bubble glows, etc. can react to the user-chosen theme colours
+     in real time (applyTheme() in app.js overwrites these at runtime). */
+  --primary-rgb: 0, 212, 255;
+  --accent-rgb:  255, 0, 170;
+
+  --font-display: 'Orbitron', 'Space Grotesk', system-ui, sans-serif;
+  --font-body:    'Rajdhani', 'Space Grotesk', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font-body);
+  background: var(--bg-soft);
+  color: var(--text);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+#app {
+  max-width: 480px;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(0,212,255,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(191,0,255,0.04) 0%, transparent 50%),
+    var(--bg-soft);
+  position: relative;
+  box-shadow: 0 0 60px rgba(0,212,255,0.12), 0 0 120px rgba(0,0,0,0.8);
+}
+
+/* ====== TYPOGRAPHY BASELINE ====== */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+h2 { font-size: 22px; line-height: 1.1; letter-spacing: 0.06em; }
+h3 { font-size: 18px; line-height: 1.15; }
+p  { font-size: 14px; line-height: 1.5; color: var(--text-soft); font-family: var(--font-body); }
+
+/* ====== TOP BAR ====== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  padding-left: calc(18px + env(safe-area-inset-left, 0px));
+  padding-right: calc(18px + env(safe-area-inset-right, 0px));
+  background: rgba(8, 8, 15, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--divider);
+  box-shadow: 0 1px 0 rgba(0,212,255,0.08), 0 4px 20px rgba(0,0,0,0.4);
+  z-index: 5;
+  position: relative;
+}
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 0 6px rgba(0,212,255,0.5));
+}
+.brand-text { line-height: 1.05; }
+.brand-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--primary);
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 12px rgba(0,212,255,0.6), 0 0 24px rgba(0,212,255,0.2);
+}
+.brand-sub {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-top: 1px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.wallet { display: flex; gap: 8px; }
+.coin {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0,212,255,0.06);
+  padding: 6px 12px 6px 8px;
+  border-radius: 20px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid rgba(0,212,255,0.2);
+  box-shadow: 0 0 8px rgba(0,212,255,0.1), inset 0 0 8px rgba(0,212,255,0.03);
+  color: var(--primary);
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 8px rgba(0,212,255,0.4);
+}
+.coin-icon { width: 22px; height: 22px; filter: drop-shadow(0 0 4px rgba(0,212,255,0.5)); }
+
+/* ====== SCREENS ====== */
+.screen {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;          /* never allow sideways scroll inside a screen */
+  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.screen.active { display: flex; }
+.screen::-webkit-scrollbar { width: 0; }
+
+/* ====== WORLD METER ====== */
+.world-meter {
+  margin: 14px 18px 0;
+  padding: 12px 16px;
+  background: var(--card);
+  border-radius: 16px;
+  border: 1px solid var(--divider);
+  box-shadow: 0 0 12px rgba(0,212,255,0.06), 0 4px 20px rgba(0,0,0,0.3);
+}
+.meter-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.meter-label-text {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.meter-value {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 8px rgba(0,212,255,0.5);
+}
+.meter-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(0,212,255,0.06);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(0,212,255,0.1);
+}
+.meter-fill {
+  height: 100%;
+  width: 50%;
+  background: var(--meter-neutral);
+  border-radius: 6px;
+  transition: width 600ms cubic-bezier(.65,.05,.36,1), background 400ms ease, box-shadow 400ms ease;
+}
+.world-meter.good .meter-fill {
+  background: linear-gradient(90deg, var(--neon-cyan), var(--primary-light));
+  box-shadow: 0 0 14px rgba(0,212,255,0.8), 0 0 28px rgba(0,212,255,0.3);
+}
+.world-meter.bad .meter-fill {
+  background: linear-gradient(90deg, var(--villain), var(--meter-bad));
+  box-shadow: 0 0 14px rgba(255,0,110,0.9), 0 0 28px rgba(191,0,255,0.4);
+  animation: meterPulse 1.4s ease-in-out infinite;
+}
+@keyframes meterPulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255,0,110,0.6), 0 0 16px rgba(191,0,255,0.3); }
+  50%      { box-shadow: 0 0 22px rgba(255,0,110,1), 0 0 44px rgba(191,0,255,0.6); }
+}
+.meter-poles {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.meter-poles .hero-pole    { color: var(--neon-cyan); text-shadow: 0 0 6px rgba(0,212,255,0.5); }
+.meter-poles .villain-pole { color: var(--villain-glow); text-shadow: 0 0 6px rgba(255,0,170,0.5); }
+
+/* ====== STATS ROW ====== */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 12px 18px 0;
+}
+.stat {
+  background: var(--card);
+  padding: 10px 8px;
+  border-radius: 14px;
+  text-align: center;
+  border: 1px solid var(--divider);
+  box-shadow: 0 0 10px rgba(0,212,255,0.05), 0 4px 12px rgba(0,0,0,0.3);
+}
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 10px rgba(0,212,255,0.5);
+}
+.stat-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+}
+
+/* ====== ROOM ====== */
+.room-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 18px 8px;
+  align-items: center;
+}
+.room {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(0,212,255,0.2),
+    0 0 20px rgba(0,212,255,0.1),
+    0 0 60px rgba(0,0,0,0.6),
+    inset 0 0 40px rgba(0,0,0,0.3);
+  background: var(--wall);
+  border: 1px solid rgba(0,212,255,0.15);
+  transition: filter 700ms ease;
+}
+.room.corrupted {
+  filter: hue-rotate(280deg) saturate(1.5) contrast(1.05);
+}
+.room-wall {
+  position: absolute;
+  inset: 0 0 40% 0;
+  background: linear-gradient(180deg, #0a0918 0%, #0d0c22 100%);
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(0,212,255,0.06) 0%, transparent 40%),
+    radial-gradient(circle at 75% 75%, rgba(191,0,255,0.06) 0%, transparent 40%),
+    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+  background-size: auto, auto, 40px 40px, 40px 40px;
+}
+.room-floor {
+  position: absolute;
+  inset: 60% 0 0 0;
+  background: linear-gradient(180deg, #060410 0%, #03020a 100%);
+  background-image:
+    linear-gradient(rgba(0,212,255,0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.room-floor::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%);
+}
+.placed-items { position: absolute; inset: 0; pointer-events: none; }
+.placed-item {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(0 0 6px rgba(0,212,255,0.3)) drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.15s;
+}
+.placed-item:active { cursor: grabbing; transform: scale(1.08); }
+.placed-item svg { width: 100%; height: 100%; }
+
+/* ====== CHARACTER ====== */
+.character {
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 180px;
+  z-index: 3;
+  --skin: #f4d4b6;
+  --skin-shadow: #d9a098;
+  --hair: #1a1a2e;
+  --hair-shadow: #0d0d18;
+  --sweater: #0d1a2e;
+  --sweater-shadow: #060d18;
+  --sweater-light: #1a2a40;
+  --collar: #0a1220;
+  --bowtie-color: #00d4ff;
+}
+.character.focus-mode {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  width: 180px;
+  height: 240px;
+  margin: 0 auto;
+}
+.character > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  animation: heroIdle 3.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(0,212,255,0.2));
+}
+@keyframes heroIdle {
+  0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+  50%      { transform: translateY(-3px) rotate(0.6deg); }
+}
+.character.sad > svg { animation: heroSad 1.4s ease-in-out infinite; filter: brightness(0.85) drop-shadow(0 0 4px rgba(0,0,0,0.5)); }
+@keyframes heroSad {
+  0%, 100% { transform: translateY(2px); }
+  50%      { transform: translateY(0); }
+}
+
+/* outfit color tokens — comic book superhero palette
+   Every skin gets a cape (different style/color) per design brief. */
+.character[data-skin="classic"]   { --sweater: #2862a8; --sweater-shadow: #1a4070; --sweater-light: #4a86d0; --bowtie-color: #c84a3a; --cape-color: #c84a3a; --mask-color: #1a3050; --hair: #3a2a1c; }
+.character[data-skin="detective"] { --sweater: #5a3a22; --sweater-shadow: #2a1808; --sweater-light: #7a5436; --bowtie-color: #1a1008; --cape-color: #2a1a08; --hair: #1a0e08; }
+.character[data-skin="scholar"]   { --sweater: #2a2a3a; --sweater-shadow: #16162a; --sweater-light: #3a3a52; --bowtie-color: #d4a64a; --cape-color: #16162a; --hair: #3a2a1c; }
+.character[data-skin="wizard"]    { --sweater: #3a2a6b; --sweater-shadow: #1f1740; --sweater-light: #5a4290; --bowtie-color: #f3d774; --cape-color: #1f1740; --hair: #3a2a1c; }
+.character[data-skin="astronaut"] { --sweater: #e0e4eb; --sweater-shadow: #b9bcc4; --sweater-light: #fffaef; --bowtie-color: #6f9c64; --cape-color: #c0c4cc; --hair: #3a2a1c; }
+.character[data-skin="sigma"]     { --sweater: #1a1a1a; --sweater-shadow: #000; --sweater-light: #3a3a3a; --bowtie-color: #c2a060; --cape-color: #0a0a0a; --hair: #1a0e08; }
+.character[data-skin="knight"]    { --sweater: #c2c4c8; --sweater-shadow: #888a8e; --sweater-light: #e0e2e6; --bowtie-color: #c84a3a; --cape-color: #c84a3a; --hair: #3a2a1c; }
+/* Pop Star — MJ-inspired: red leather jacket, black trousers + glove, black cape tail */
+.character[data-skin="popstar"]   { --sweater: #c8202a; --sweater-shadow: #6a0a10; --sweater-light: #ff5060; --bowtie-color: #ffffff; --cape-color: #0a0a0a; --hair: #1a1208; }
+/* Martial Artist — Bruce-Lee-inspired: yellow tracksuit, black stripe, dark cape (kept subtle) */
+.character[data-skin="martial"]   { --sweater: #ffcc00; --sweater-shadow: #8a6a00; --sweater-light: #fff060; --bowtie-color: #0a0a0a; --cape-color: #1a1a1a; --hair: #0a0606; }
+/* Neon DJ — purple jacket with cyan trim, magenta cape */
+.character[data-skin="dj"]        { --sweater: #4a1860; --sweater-shadow: #2a0a40; --sweater-light: #7a3090; --bowtie-color: #00d4ff; --cape-color: #bf00ff; --hair: #ff00aa; }
+
+/* ====== MR. 67 ====== */
+.character.villain {
+  width: 90px;
+  height: 130px;
+  bottom: 6%;
+  left: auto;
+  right: 6%;
+  transform: none;
+  z-index: 2;
+  transition: transform 500ms cubic-bezier(.5,0,.5,1.5), opacity 500ms ease;
+  transform-origin: bottom center;
+}
+.character.villain > svg {
+  animation: villainWobble 0.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(191,0,255,0.6)) drop-shadow(0 0 20px rgba(255,0,170,0.3));
+}
+@keyframes villainWobble {
+  0%   { transform: translate(0,0) skew(0); }
+  25%  { transform: translate(-1.5px, 0) skew(2deg, 0); }
+  50%  { transform: translate(1.5px, -1px) skew(-2deg, 1deg); }
+  75%  { transform: translate(-1px, 1px) skew(1deg, -1deg); }
+  100% { transform: translate(0,0) skew(0); }
+}
+.room.meter-good .character.villain { transform: scale(0.55); opacity: 0.3; }
+.room.meter-bad  .character.villain { transform: scale(1.18); }
+body.focus-active #mr67 { transform: scale(0.4) rotate(-12deg); opacity: 0.2; }
+
+/* ====== FULL-SCREEN LOCK during a focus session ====== */
+body.focus-active .topbar,
+body.focus-active .bottom-nav,
+body.focus-active #screen-room,
+body.focus-active #screen-shop,
+body.focus-active #screen-inventory,
+body.focus-active #screen-edit,
+body.focus-active #backFromFocus {
+  display: none !important;
+}
+body.focus-active #screen-focus {
+  display: flex !important;
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  padding-bottom: 0;
+  /* The focus-screen energy rings use insets like -38%; clip them so they
+     never trigger a horizontal scrollbar / sideways pan gesture. */
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0,212,255,0.07) 0%, transparent 60%),
+    radial-gradient(circle at 20% 100%, rgba(191,0,255,0.05) 0%, transparent 50%),
+    var(--bg-soft);
+}
+body.focus-active .focus-wrap {
+  padding-top: calc(28px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(18px + env(safe-area-inset-left, 0px));
+  padding-right: calc(18px + env(safe-area-inset-right, 0px));
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-x: hidden;          /* no sideways pan inside the wrap */
+  touch-action: pan-y;         /* horizontal swipes don't trigger scroll */
+}
+body.focus-active .duration-picker {
+  display: none !important;
+}
+body.focus-active #beginBtn { display: none !important; }
+body.focus-active #cancelBtn {
+  display: inline-flex !important;
+  align-self: center;
+  margin-top: 8px;
+}
+
+.character.villain.laughing > svg { animation: villainLaugh 0.5s ease-in-out 4; }
+@keyframes villainLaugh {
+  0%, 100% { transform: scale(1) rotate(0); }
+  50%      { transform: scale(1.18) rotate(4deg); }
+}
+
+.character.villain.banished > svg {
+  animation: villainBanish 1.4s cubic-bezier(.5,0,.3,1) forwards;
+}
+@keyframes villainBanish {
+  0%   { transform: scale(1)    rotate(0);     opacity: 1; }
+  30%  { transform: scale(1.15) rotate(-8deg); filter: drop-shadow(0 0 20px rgba(191,0,255,1)); opacity: 1; }
+  100% { transform: scale(0)    rotate(360deg); opacity: 0; }
+}
+
+/* ====== HERO NAME ====== */
+.hero-name-row {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 10px rgba(0,212,255,0.2);
+}
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px;
+  text-shadow: 0 0 6px rgba(0,212,255,0.4);
+}
+
+.action-row {
+  padding: 0 24px 14px;
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+/* ====== SPEECH BUBBLES ====== */
+.speech-bubble {
+  position: absolute;
+  background: var(--card);
+  padding: 9px 14px;
+  border-radius: 18px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(0,212,255,0.2);
+  box-shadow: 0 0 12px rgba(0,212,255,0.1), 0 4px 16px rgba(0,0,0,0.4);
+  z-index: 5;
+  animation: bubbleIn 0.3s ease-out;
+  max-width: 70%;
+  white-space: nowrap;
+  color: var(--text);
+}
+.speech-bubble.hero-bubble {
+  top: 7%;
+  left: 22%;
+  transform: translateX(-50%);
+}
+.speech-bubble.hero-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(0,212,255,0.3);
+}
+.speech-bubble.villain-bubble {
+  bottom: 36%;
+  right: 4%;
+  background: rgba(13, 0, 26, 0.95);
+  color: var(--villain-text);
+  font-style: italic;
+  border: 1px solid rgba(191,0,255,0.4);
+  box-shadow: 0 0 14px rgba(191,0,255,0.3), 0 4px 16px rgba(0,0,0,0.4);
+}
+.speech-bubble.villain-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  right: 18px;
+  border: 6px solid transparent;
+  border-top-color: rgba(191,0,255,0.5);
+}
+@keyframes bubbleIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ====== BUTTONS ====== */
+.primary-btn {
+  background: linear-gradient(135deg, rgba(0,212,255,0.15) 0%, rgba(0,100,200,0.15) 100%);
+  color: #fff;
+  border: 1.5px solid var(--neon-cyan);
+  padding: 14px 30px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 28px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 0 14px rgba(0,212,255,0.45), 0 0 28px rgba(0,212,255,0.15), inset 0 0 10px rgba(0,212,255,0.05);
+  text-shadow: 0 0 10px rgba(0,212,255,0.8), 0 0 20px rgba(0,212,255,0.4);
+  transition: transform 0.1s, box-shadow 0.1s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.primary-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 0 6px rgba(0,212,255,0.6), 0 0 12px rgba(0,212,255,0.2);
+}
+.primary-btn:disabled {
+  border-color: var(--muted);
+  color: var(--muted);
+  box-shadow: none;
+  text-shadow: none;
+  cursor: not-allowed;
+  background: rgba(64,80,112,0.1);
+}
+.btn-icon { width: 22px; height: 22px; }
+.btn-icon path, .btn-icon line { stroke: white; }
+
+.ghost-btn {
+  background: transparent;
+  color: var(--text-soft);
+  border: 1.5px solid rgba(0,212,255,0.2);
+  padding: 12px 22px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 22px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+}
+.ghost-btn:hover { border-color: rgba(0,212,255,0.4); color: var(--text); }
+.ghost-btn.danger { color: var(--neon-pink); border-color: rgba(255,0,110,0.35); }
+
+/* ====== FOCUS SCREEN ====== */
+.focus-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 20px 20px;
+  gap: 18px;
+  position: relative;
+}
+.back-btn {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(0,212,255,0.06);
+  border: 1px solid rgba(0,212,255,0.2);
+  color: var(--text-soft);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  padding: 8px 14px 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 18px;
+}
+.back-icon { width: 20px; height: 20px; }
+
+.focus-stage {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.focus-character { width: 180px; height: 240px; display: flex; align-items: center; justify-content: center; }
+.focus-villain {
+  position: absolute;
+  bottom: 0;
+  right: -20px;
+  width: 60px;
+  height: 90px;
+  opacity: 0.25;
+  transform: scale(0.7) rotate(-8deg);
+  filter: blur(0.5px) drop-shadow(0 0 6px rgba(191,0,255,0.4));
+}
+
+.timer-display { text-align: center; }
+.timer-text {
+  font-family: var(--font-display);
+  font-size: 66px;
+  font-weight: 700;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(0,212,255,0.8), 0 0 40px rgba(0,212,255,0.4), 0 0 60px rgba(0,212,255,0.15);
+}
+.timer-sub {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  max-width: 320px;
+  text-transform: uppercase;
+}
+
+.duration-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 460px;
+  width: 100%;
+}
+.chip {
+  background: rgba(0,212,255,0.04);
+  border: 1px solid rgba(0,212,255,0.2);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-soft);
+  letter-spacing: 0.04em;
+  min-width: 44px;
+  transition: transform 0.1s, border-color 0.2s;
+}
+.chip:active { transform: scale(0.95); }
+.chip.selected {
+  background: rgba(0,212,255,0.15);
+  color: var(--primary);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0,212,255,0.35), inset 0 0 6px rgba(0,212,255,0.08);
+  text-shadow: 0 0 6px rgba(0,212,255,0.6);
+}
+
+/* .mode-toggle was used by the Pomodoro switch — removed with the feature.
+   .switch + .slider styles below remain in case any other toggle reuses them. */
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: rgba(0,212,255,0.1);
+  border-radius: 24px;
+  border: 1px solid rgba(0,212,255,0.2);
+  transition: 0.3s;
+}
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 2px;
+  background: var(--muted);
+  border-radius: 50%;
+  transition: 0.3s;
+}
+input:checked + .slider {
+  background: rgba(0,212,255,0.2);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 8px rgba(0,212,255,0.4);
+}
+input:checked + .slider::before {
+  transform: translateX(20px);
+  background: var(--neon-cyan);
+  box-shadow: 0 0 6px rgba(0,212,255,0.6);
+}
+
+.focus-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+/* ====== PAGE HEADERS (shop/inventory/edit) ====== */
+.page-header {
+  padding: 22px 22px 8px;
+}
+.page-header h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--text);
+  margin-bottom: 4px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(0,212,255,0.2);
+}
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+}
+
+.shop-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 8px 22px 14px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.shop-tabs::-webkit-scrollbar { display: none; }
+.tab {
+  background: rgba(0,212,255,0.04);
+  border: 1px solid rgba(0,212,255,0.15);
+  padding: 7px 14px;
+  border-radius: 18px;
+  font-weight: 600;
+  font-family: var(--font-display);
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-soft);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+  transition: transform 0.1s, border-color 0.2s;
+}
+.tab:active { transform: scale(0.95); }
+.tab.selected {
+  background: rgba(0,212,255,0.12);
+  color: var(--primary);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0,212,255,0.3);
+  text-shadow: 0 0 6px rgba(0,212,255,0.5);
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 4px 18px 24px;
+}
+.shop-item {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 16px 12px 14px;
+  text-align: center;
+  border: 1px solid rgba(0,212,255,0.12);
+  box-shadow: 0 0 10px rgba(0,212,255,0.04), 0 4px 16px rgba(0,0,0,0.3);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.15s, border-color 0.15s;
+  position: relative;
+}
+.shop-item:active {
+  transform: scale(0.97);
+  border-color: rgba(0,212,255,0.3);
+  box-shadow: 0 0 16px rgba(0,212,255,0.2);
+}
+.item-icon-wrap {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 6px rgba(0,212,255,0.25)) drop-shadow(0 3px 6px rgba(0,0,0,0.4));
+}
+.item-icon-wrap svg { width: 100%; height: 100%; }
+.shop-item .item-name {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 5px;
+  letter-spacing: 0.04em;
+}
+.shop-item .item-price {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-shadow: 0 0 6px rgba(0,212,255,0.4);
+}
+.price-icon { width: 14px; height: 14px; }
+.shop-item.owned { opacity: 0.55; }
+.shop-item.owned::after,
+.shop-item.placed::after,
+.shop-item.equipped::after {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0,255,136,0.15);
+  color: var(--neon-green);
+  border: 1px solid rgba(0,255,136,0.4);
+  padding: 3px 9px;
+  border-radius: 8px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+.shop-item.owned::after    { content: "OWNED"; }
+.shop-item.placed::after   { content: "PLACED";   background: rgba(0,212,255,0.1); color: var(--primary); border-color: rgba(0,212,255,0.3); }
+.shop-item.equipped::after { content: "EQUIPPED"; background: rgba(0,212,255,0.1); color: var(--primary); border-color: rgba(0,212,255,0.3); }
+.shop-item.unaffordable { opacity: 0.6; }
+.shop-item.unaffordable .item-price { color: var(--neon-pink); text-shadow: none; }
+
+/* outfit preview shows mini character */
+.outfit-preview {
+  width: 64px;
+  height: 80px;
+  margin: 0 auto 8px;
+  position: relative;
+}
+.outfit-preview .character {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  bottom: auto;
+  left: auto;
+  transform: none;
+}
+.outfit-preview .character > svg { animation: none; }
+
+/* ====== BOTTOM NAV ====== */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(8, 8, 15, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(0,212,255,0.12);
+  display: flex;
+  height: calc(68px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  z-index: 10;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5), 0 -1px 0 rgba(0,212,255,0.06);
+}
+.nav-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  color: var(--muted);
+  padding: 6px 0;
+  position: relative;
+  transition: color 0.2s;
+}
+.nav-svg {
+  width: 24px;
+  height: 24px;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.2s, filter 0.2s;
+}
+.nav-svg path, .nav-svg line, .nav-svg rect, .nav-svg circle, .nav-svg ellipse {
+  stroke: currentColor;
+  fill: transparent;
+}
+.nav-btn .nav-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.nav-btn.active { color: var(--primary); text-shadow: 0 0 8px rgba(0,212,255,0.6); }
+.nav-btn.active .nav-svg { opacity: 1; transform: translateY(-1px); filter: drop-shadow(0 0 4px rgba(0,212,255,0.6)); }
+.nav-btn.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 2px;
+  border-radius: 0 0 3px 3px;
+  background: var(--primary);
+  box-shadow: 0 0 8px var(--primary), 0 0 16px rgba(0,212,255,0.4);
+}
+
+/* ====== MODAL ====== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+  animation: modalIn 0.2s ease-out;
+}
+@keyframes modalIn { from { opacity: 0; } to { opacity: 1; } }
+.modal.hidden { display: none; }
+.modal-content {
+  background: #0d0d1e;
+  border-radius: 22px;
+  padding: 24px 22px;
+  max-width: 340px;
+  width: 100%;
+  border: 1px solid rgba(0,212,255,0.25);
+  box-shadow: 0 0 30px rgba(0,212,255,0.12), 0 0 60px rgba(191,0,255,0.06), 0 20px 50px rgba(0,0,0,0.6);
+  animation: modalContentIn 0.3s cubic-bezier(.5,0,.3,1.4);
+}
+@keyframes modalContentIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.92); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-content h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: var(--text);
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 12px rgba(0,212,255,0.25);
+}
+.modal-content p {
+  font-size: 14px;
+  color: var(--text-soft);
+  margin-bottom: 18px;
+  line-height: 1.5;
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+.modal-content input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(0,212,255,0.25);
+  border-radius: 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 18px;
+  background: rgba(0,212,255,0.04);
+  color: var(--text);
+  letter-spacing: 0.04em;
+}
+.modal-content input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 10px rgba(0,212,255,0.25);
+}
+.modal-actions { display: flex; gap: 10px; }
+.modal-actions button { flex: 1; }
+
+/* ====== TOAST ====== */
+.toast {
+  position: fixed;
+  bottom: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,212,255,0.1);
+  color: var(--primary);
+  border: 1px solid rgba(0,212,255,0.35);
+  padding: 12px 22px;
+  border-radius: 24px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  z-index: 50;
+  box-shadow: 0 0 16px rgba(0,212,255,0.25), 0 8px 24px rgba(0,0,0,0.5);
+  text-shadow: 0 0 8px rgba(0,212,255,0.6);
+  animation: toastIn 0.3s ease-out;
+}
+.toast.hidden { display: none; }
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.danger-zone {
+  padding: 30px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.hidden { display: none !important; }
+
+/* ====== FOCUS LOCK BADGE ====== */
+.lock-badge {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(0,212,255,0.08);
+  color: var(--primary);
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px rgba(0,212,255,0.15);
+  text-shadow: 0 0 6px rgba(0,212,255,0.5);
+}
+.lock-badge svg { width: 14px; height: 14px; filter: drop-shadow(0 0 3px rgba(0,212,255,0.5)); }
+.lock-badge svg path,
+.lock-badge svg circle,
+.lock-badge svg line {
+  stroke: currentColor;
+  fill: transparent;
+}
+
+/* ====== PLACEMENT ====== */
+.placement-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20px;
+  z-index: 6;
+  backdrop-filter: blur(3px);
+}
+.placement-toolbar {
+  background: #0d0d1e;
+  padding: 10px 14px;
+  border-radius: 18px;
+  display: flex;
+  gap: 6px;
+  border: 1px solid rgba(0,212,255,0.2);
+  box-shadow: 0 0 16px rgba(0,212,255,0.1), 0 8px 24px rgba(0,0,0,0.5);
+}
+.placement-toolbar button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.placement-toolbar button:hover { background: rgba(0,212,255,0.08); }
+.placement-toolbar button:active { transform: scale(0.92); }
+.placement-toolbar button svg { width: 24px; height: 24px; }
+.placement-toolbar .confirm-btn { background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.3); }
+.placement-toolbar .confirm-btn svg path { stroke: var(--primary); }
+.placement-toolbar .cancel-btn  { background: rgba(255,0,110,0.1); border: 1px solid rgba(255,0,110,0.2); }
+
+.placing-item {
+  position: absolute;
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(0 0 10px rgba(0,212,255,0.6)) drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+  z-index: 7;
+  animation: floatPulse 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+.placing-item svg { width: 100%; height: 100%; }
+@keyframes floatPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.06); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.shake { animation: shake 0.4s ease-in-out; }
+
+/* ====== GAMING DASHBOARD POLISH ====== */
+/* Cleaner dark gaming dashboard look — restrained accents, rounded panels,
+   letting the character artwork carry the visual weight. */
+
+/* Soften the room border so the character art reads cleaner */
+.room {
+  border-radius: 18px;
+  border: 1px solid rgba(0,212,255,0.18);
+  box-shadow:
+    0 0 0 1px rgba(0,212,255,0.1),
+    0 8px 32px rgba(0,0,0,0.55),
+    inset 0 0 60px rgba(0,0,0,0.4);
+}
+
+/* World meter — clean panel, no clip-path */
+.world-meter {
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(13,13,30,0.85);
+}
+
+/* Stat cards — restrained */
+.stat {
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(13,13,30,0.85);
+  position: relative;
+}
+.stat-num {
+  text-shadow: 0 0 8px rgba(0,212,255,0.35);
+}
+
+/* Shop items — clean cards */
+.shop-item {
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(13,13,30,0.9);
+}
+.shop-item:active {
+  border-color: rgba(0,212,255,0.4);
+}
+
+/* Modal — clean centered card */
+.modal-content {
+  border-radius: 18px;
+  border: 1px solid rgba(0,212,255,0.18);
+}
+
+/* Buttons — clean rounded, accent border + subtle glow */
+.primary-btn {
+  border-radius: 24px;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(0,212,255,0.35), 0 4px 16px rgba(0,0,0,0.4);
+  text-shadow: 0 0 6px rgba(0,212,255,0.5);
+}
+.ghost-btn {
+  border-radius: 22px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+/* Chips & tabs — rounded pills */
+.chip, .tab {
+  border-radius: 18px;
+}
+.toast { border-radius: 22px; }
+.back-btn { border-radius: 16px; }
+.lock-badge { border-radius: 999px; }
+.placement-toolbar { border-radius: 16px; }
+.coin { border-radius: 18px; }
+
+/* Topbar bottom subtle accent */
+.topbar::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 12px; right: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.35) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Bottom nav top accent */
+.bottom-nav::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 12px; right: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,212,255,0.25) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Tone the timer down — large, neon, but no jittery flicker */
+.timer-text {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-shadow:
+    0 0 14px rgba(0,212,255,0.7),
+    0 0 32px rgba(0,212,255,0.3);
+}
+
+/* Focus screen — subtle radial accent only, no jarring grid */
+body.focus-active #screen-focus {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(0,212,255,0.07) 0%, transparent 65%),
+    radial-gradient(circle at 30% 90%, rgba(191,0,255,0.04) 0%, transparent 50%),
+    var(--bg-soft);
+}
+
+/* Make character drop-shadow more cinematic against dark bg */
+.character > svg {
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 14px rgba(0,212,255,0.15));
+}
+.character.villain > svg {
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6)) drop-shadow(0 0 16px rgba(191,0,255,0.4));
+}
+
+/* Hero stands on the LEFT, villain stands on the RIGHT, so each has space
+   to animate without overlapping. */
+.character {
+  width: 150px;
+  height: 210px;
+  bottom: 4%;
+  left: 3%;
+  transform: none;
+}
+.character.focus-mode {
+  width: 200px;
+  height: 260px;
+  /* focus screen uses its own centered layout */
+  left: auto;
+}
+.character.villain {
+  width: 130px;
+  height: 180px;
+  bottom: 4%;
+  left: auto;
+  right: 3%;
+}
+/* Outfit preview (inside shop cards) — re-centered, not the room layout */
+.outfit-preview .character {
+  left: auto;
+  bottom: auto;
+  transform: none;
+}
+
+/* ====== EMOTES & CHARACTER ANIMATIONS ====== */
+
+/* Joints — every animatable group pivots around its anchor point so rotations
+   look natural. transform-box: view-box keeps the origin in SVG user units. */
+.character svg .h-arm,
+.character svg .h-forearm,
+.character svg .h-leg,
+.character svg .h-shin,
+.character svg .v-arm {
+  transform-box: view-box;
+  transform-origin: center;
+  transition: transform 0.25s cubic-bezier(.5,0,.3,1.2);
+}
+/* Shoulders */
+.character svg .h-arm-l { transform-origin: 55px 92px; }
+.character svg .h-arm-r { transform-origin: 145px 92px; }
+/* Elbows */
+.character svg .h-forearm-l { transform-origin: 49px 130px; }
+.character svg .h-forearm-r { transform-origin: 151px 130px; }
+/* Hips */
+.character svg .h-leg-l { transform-origin: 91px 178px; }
+.character svg .h-leg-r { transform-origin: 109px 178px; }
+/* Knees */
+.character svg .h-shin-l { transform-origin: 92px 222px; }
+.character svg .h-shin-r { transform-origin: 108px 222px; }
+/* Villain shoulders (unchanged) */
+.character svg .v-arm-l { transform-origin: 53px 92px; }
+.character svg .v-arm-r { transform-origin: 147px 92px; }
+
+/* Hero / character tappable affordance */
+.character {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.character:active > svg {
+  transform: scale(0.96);
+  transition: transform 0.1s;
+}
+
+/* ----- Mr. 67's "6 7" hand-wave gesture (alternating arms raised) ----- */
+/* 6-7 hand gesture — TRUE OSCILLATION.
+   Sequence:
+     1. left arm rises ALONE (initial pulse)
+     2. swap: left falls WHILE right rises (simultaneous)
+     3. swap: right falls WHILE left rises (simultaneous)
+     4. swap: left falls WHILE right rises (simultaneous)
+     5. right arm falls ALONE (final pulse, concludes the animation)
+   Outward rotation: positive deg for left shoulder, negative for right. */
+@keyframes gesture67Left {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(140deg); }    /* alone raise */
+  35%  { transform: rotate(0deg); }      /* swap — falls as right rises */
+  55%  { transform: rotate(140deg); }    /* swap — rises as right falls */
+  75%  { transform: rotate(0deg); }      /* swap — falls as right rises */
+  100% { transform: rotate(0deg); }
+}
+@keyframes gesture67Right {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(0deg); }      /* waits while left raises alone */
+  35%  { transform: rotate(-140deg); }   /* swap — rises as left falls */
+  55%  { transform: rotate(0deg); }      /* swap — falls as left rises */
+  75%  { transform: rotate(-140deg); }   /* swap — rises as left falls */
+  90%  { transform: rotate(0deg); }      /* alone fall to conclude */
+  100% { transform: rotate(0deg); }
+}
+.character.villain.gesture-67 svg .v-arm-l {
+  animation: gesture67Left 3s ease-in-out 1;
+}
+.character.villain.gesture-67 svg .v-arm-r {
+  animation: gesture67Right 3s ease-in-out 1;
+}
+@keyframes villainBob {
+  0%, 100% { transform: translateY(0); }
+  25%      { transform: translateY(-4px); }
+  50%      { transform: translateY(0); }
+  75%      { transform: translateY(-3px); }
+}
+.character.villain.gesture-67 > svg {
+  animation: villainBob 0.75s ease-in-out 4;
+}
+
+/* ----- Hero emote: heroic wave (right arm up + slight tilt) ----- */
+@keyframes heroWaveArm {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(170deg); }
+  30%  { transform: rotate(150deg); }
+  45%  { transform: rotate(170deg); }
+  60%  { transform: rotate(150deg); }
+  75%  { transform: rotate(170deg); }
+  90%  { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes heroBodyLean {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  20%      { transform: translateY(-2px) rotate(2deg); }
+  80%      { transform: translateY(-2px) rotate(2deg); }
+}
+.character.emote-wave svg .h-arm-r {
+  animation: heroWaveArm 2.2s ease-in-out 1;
+}
+.character.emote-wave > svg {
+  animation: heroBodyLean 2.2s ease-in-out 1 !important;
+}
+
+/* ----- Hero emote: flex (both arms up, chest puffed) ----- */
+@keyframes heroFlexLeft {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(-140deg); }
+  80%  { transform: rotate(-140deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes heroFlexRight {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(140deg); }
+  80%  { transform: rotate(140deg); }
+  100% { transform: rotate(0deg); }
+}
+@keyframes heroChestPuff {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.06); }
+}
+.character.emote-flex svg .h-arm-l {
+  animation: heroFlexLeft 1.8s ease-in-out 1;
+}
+.character.emote-flex svg .h-arm-r {
+  animation: heroFlexRight 1.8s ease-in-out 1;
+}
+.character.emote-flex > svg {
+  animation: heroChestPuff 1.8s ease-in-out 1 !important;
+}
+
+/* ----- Hero emote: power pose (slight bob, glow pulse) ----- */
+@keyframes heroPower {
+  0%, 100% { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 14px rgba(0,212,255,0.15)); }
+  50%      { filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 30px rgba(0,212,255,0.7)); }
+}
+.character.emote-power > svg {
+  animation: heroPower 1.6s ease-in-out 1 !important;
+}
+
+/* ----- Cape flutter (subtle continuous motion) ----- */
+@keyframes capeFlutter {
+  0%, 100% { transform: rotate(0deg) skewX(0deg); }
+  25%      { transform: rotate(-0.8deg) skewX(1deg); }
+  50%      { transform: rotate(0.5deg) skewX(-0.8deg); }
+  75%      { transform: rotate(-0.4deg) skewX(0.6deg); }
+}
+.character svg .hero-cape-layer {
+  transform-box: view-box;
+  transform-origin: 100px 80px;
+  animation: capeFlutter 4.5s ease-in-out infinite;
+}
+
+/* When the hero is doing an emote, the cape sways harder */
+.character.emote-wave svg .hero-cape-layer,
+.character.emote-flex svg .hero-cape-layer,
+.character.emote-power svg .hero-cape-layer {
+  animation-duration: 1.6s;
+}
+
+/* ----- Idle breathing on the body (subtle) ----- */
+@keyframes idleBreath {
+  0%, 100% { transform: translateY(0) rotate(-0.4deg); }
+  50%      { transform: translateY(-2px) rotate(0.4deg); }
+}
+.character > svg {
+  animation: idleBreath 3.6s ease-in-out infinite;
+}
+
+/* ----- Eye-blink — animates the eye group only (not the mask cloth) ----- */
+@keyframes eyeBlink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  96%           { transform: scaleY(0.08); }
+}
+.character svg .h-eyes {
+  transform-box: view-box;
+  transform-origin: 100px 44px;
+  animation: eyeBlink 5s ease-in-out infinite;
+}
+/* The masked eyes (slits) pivot around the same point but the mask cloth
+   beneath them stays put because it isn't part of the .h-eyes group. */
+.character svg .h-mask-eyes { transform-origin: 100px 44px; }
+
+/* ----- Tap pulse ring on click (premium feedback) ----- */
+.character.tapped::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  border: 2px solid var(--neon-cyan);
+  border-radius: 50%;
+  opacity: 0;
+  animation: tapPulse 0.6s ease-out;
+  pointer-events: none;
+}
+.character.villain.tapped::before {
+  border-color: var(--villain-glow);
+}
+@keyframes tapPulse {
+  0%   { opacity: 0.8; transform: scale(0.6); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+/* ====== SHOP TAB FIX ====== */
+/* Tabs use lowercase + tighter spacing and a snap-scroll so each tab lands
+   cleanly in view. The category bar can scroll horizontally but the contents
+   of each pill are never truncated. Padding-bottom is generous so the
+   selected-tab glow shadow doesn't get cropped. */
+.shop-tabs {
+  position: relative;
+  scroll-snap-type: x mandatory;
+  padding: 10px 18px 20px;
+  align-items: center;
+  min-height: 56px;
+}
+.shop-tabs .tab {
+  scroll-snap-align: start;
+  text-transform: none;
+}
+
+/* ====== PREMIUM POLISH ====== */
+
+/* Subtle shimmer on top of cards (very low opacity).
+   IMPORTANT: don't put overflow:hidden on world-meter / stat — Android WebView
+   was clipping their content vertically. The shimmer pseudo-element is
+   positioned inside the box so it doesn't need clipping. */
+.world-meter,
+.stat,
+.shop-item,
+.modal-content {
+  position: relative;
+}
+.shop-item,
+.modal-content {
+  overflow: hidden;
+}
+.world-meter::after,
+.stat::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+/* CRITICAL Android WebView fix: stop flex children from shrinking their
+   own height, which was making the shop tabs and world meter render at
+   half-height (visually cutting off the bottom). */
+.world-meter,
+.stats-row,
+.page-header,
+.shop-tabs,
+.action-row,
+.hero-name-row,
+.room-wrap {
+  flex-shrink: 0;
+}
+
+/* Premium card hover state (touch devices: active) */
+.shop-item {
+  transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+.shop-item:active {
+  transform: translateY(-1px) scale(0.99);
+  box-shadow: 0 0 24px rgba(0,212,255,0.2), 0 8px 24px rgba(0,0,0,0.45);
+}
+
+/* Coin chips — premium look */
+.coin {
+  position: relative;
+  overflow: hidden;
+}
+.coin::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.06) 50%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Premium nav active indicator: glowing pill */
+.nav-btn.active::before {
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  height: 2px;
+  width: 36px;
+  top: 2px;
+  border-radius: 0 0 4px 4px;
+  filter: blur(0.5px);
+}
+
+/* Speech bubbles — slight bounce-in */
+@keyframes speechPop {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(8px) scale(0.85); }
+  60%  { opacity: 1; transform: translateX(-50%) translateY(-2px) scale(1.04); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+.speech-bubble.hero-bubble:not(.hidden) {
+  animation: speechPop 0.32s cubic-bezier(.5,0,.3,1.4);
+}
+.speech-bubble.villain-bubble:not(.hidden) {
+  animation: speechPop 0.32s cubic-bezier(.5,0,.3,1.4);
+}
+
+/* Smooth focus screen transitions when entering/leaving */
+.screen { transition: opacity 0.2s; }
+
+/* Modal backdrop a touch darker for premium feel */
+.modal {
+  background: radial-gradient(circle at center, rgba(10,10,30,0.5) 0%, rgba(0,0,0,0.85) 100%);
+  backdrop-filter: blur(10px);
+}
+
+/* Wallet coins gentle bounce when value changes (utility class set from JS) */
+@keyframes coinBump {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); color: var(--neon-green); }
+  100% { transform: scale(1); }
+}
+.coin.bump #brainCellsCount,
+.coin.bump #auraCount {
+  display: inline-block;
+  animation: coinBump 0.6s ease-out;
+}
+
+/* ====================================================================== */
+/* ====== COMIC NEON OVERHAUL ====== */
+/*
+   Replace the muted "premium" panels with bold comic-book panels in neon
+   colors: thick coloured borders, hard offset shadows (no blur), big block
+   headers in Bangers, halftone dots, and burst-style speech bubbles.
+*/
+/* ====================================================================== */
+
+:root {
+  --font-comic: 'Bangers', 'Bowlby One SC', 'Orbitron', cursive;
+  --ink: #000;
+  --halftone: rgba(0,212,255,0.07);
+}
+
+/* Halftone dot pattern wash across the entire app */
+#app {
+  background:
+    radial-gradient(circle, rgba(255,0,170,0.08) 1.2px, transparent 1.5px) 0 0 / 14px 14px,
+    radial-gradient(circle, rgba(0,212,255,0.08) 1.2px, transparent 1.5px) 7px 7px / 14px 14px,
+    radial-gradient(circle at 20% 0%, rgba(0,212,255,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(191,0,255,0.06) 0%, transparent 50%),
+    var(--bg-soft);
+}
+
+/* ---------- Comic-style typography ---------- */
+.brand-title,
+.page-header h2,
+.modal-content h3 {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.brand-title {
+  font-size: 18px;
+  -webkit-text-stroke: 0.6px var(--ink);
+  text-shadow:
+    2px 2px 0 var(--ink),
+    0 0 14px rgba(0,212,255,0.7);
+}
+.page-header h2 {
+  font-size: 34px;
+  line-height: 1;
+  -webkit-text-stroke: 1.2px var(--ink);
+  text-shadow:
+    3px 3px 0 var(--ink),
+    0 0 16px rgba(0,212,255,0.7);
+  color: var(--neon-cyan);
+  margin-bottom: 8px;
+  display: inline-block;
+  transform: rotate(-1.5deg);
+}
+.modal-content h3 {
+  font-size: 24px;
+  -webkit-text-stroke: 0.8px var(--ink);
+  text-shadow: 2px 2px 0 var(--ink), 0 0 12px rgba(0,212,255,0.5);
+  color: var(--neon-cyan);
+}
+
+/* ---------- Comic panel mixin (applied to major cards) ---------- */
+.world-meter,
+.stat,
+.shop-item,
+.modal-content,
+.placement-toolbar {
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  background: #11122a;
+  box-shadow:
+    4px 4px 0 var(--neon-cyan),
+    0 0 14px rgba(0,212,255,0.18);
+}
+
+/* Vary the offset-shadow colour per element type for that comic remix feel */
+.world-meter { box-shadow: 5px 5px 0 var(--neon-pink), 0 0 18px rgba(255,0,110,0.18); }
+.stat:nth-child(1) { box-shadow: 4px 4px 0 var(--neon-cyan),   0 0 12px rgba(0,212,255,0.18); }
+.stat:nth-child(2) { box-shadow: 4px 4px 0 var(--neon-green),  0 0 12px rgba(0,255,136,0.18); }
+.stat:nth-child(3) { box-shadow: 4px 4px 0 var(--neon-yellow), 0 0 12px rgba(255,204,0,0.18); }
+.shop-item        { box-shadow: 4px 4px 0 var(--neon-magenta), 0 0 12px rgba(191,0,255,0.18); }
+.modal-content    { box-shadow: 6px 6px 0 var(--neon-magenta), 0 0 24px rgba(191,0,255,0.25); }
+.placement-toolbar { box-shadow: 3px 3px 0 var(--neon-cyan); }
+
+/* Slight comic-book "tilt" on cards to break grid monotony */
+.stat:nth-child(1) { transform: rotate(-1deg); }
+.stat:nth-child(3) { transform: rotate(1deg); }
+
+/* Inner halftone dots for cards */
+.world-meter::before,
+.shop-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.2px);
+  background-size: 8px 8px;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ---------- Header pill labels ("CHAPTER"/"LIVE ART" style) ---------- */
+.meter-label-text,
+.shop-item .item-name,
+.stat-label {
+  font-family: var(--font-comic);
+  font-weight: 400;
+}
+.meter-label-text {
+  background: var(--neon-pink);
+  color: var(--ink);
+  padding: 3px 10px 1px;
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 var(--ink);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  display: inline-block;
+}
+.shop-item .item-name {
+  font-size: 16px;
+  color: var(--neon-cyan);
+  -webkit-text-stroke: 0.4px var(--ink);
+  letter-spacing: 0.04em;
+}
+.stat-label {
+  font-size: 11px;
+  color: var(--neon-yellow);
+  letter-spacing: 0.06em;
+  text-shadow: 1px 1px 0 var(--ink);
+}
+.stat-num {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 28px;
+  -webkit-text-stroke: 0.6px var(--ink);
+  text-shadow: 2px 2px 0 var(--ink), 0 0 10px rgba(0,212,255,0.5);
+}
+
+/* ---------- Tabs / chips as comic pills ---------- */
+.tab, .chip {
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  background: #14143a;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.tab.selected, .chip.selected {
+  background: var(--neon-cyan);
+  color: var(--ink);
+  box-shadow: 2px 2px 0 var(--ink), 0 0 12px rgba(0,212,255,0.7);
+  text-shadow: none;
+}
+
+/* ---------- Primary button as a thick neon comic pill ---------- */
+.primary-btn {
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--neon-cyan);
+  color: var(--ink);
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 4px 4px 0 var(--ink), 0 0 20px rgba(0,212,255,0.6);
+  text-shadow: none;
+}
+.primary-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink), 0 0 12px rgba(0,212,255,0.5);
+}
+.primary-btn .btn-icon path,
+.primary-btn .btn-icon line { stroke: var(--ink); }
+
+.ghost-btn {
+  border: 2px solid var(--neon-magenta);
+  background: transparent;
+  color: var(--neon-magenta);
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 var(--neon-magenta);
+}
+.ghost-btn.danger {
+  border-color: var(--neon-pink);
+  color: var(--neon-pink);
+  box-shadow: 3px 3px 0 var(--neon-pink);
+}
+
+/* ---------- Wallet coin chips as comic price tags ---------- */
+.coin {
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: #1a1a40;
+  box-shadow: 2px 2px 0 var(--neon-cyan);
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--neon-cyan);
+  text-shadow: 1px 1px 0 var(--ink);
+}
+
+/* ---------- The room frame as a comic panel ---------- */
+.room {
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  box-shadow:
+    6px 6px 0 var(--neon-cyan),
+    0 0 20px rgba(0,212,255,0.18);
+}
+
+/* ---------- Speech bubbles as comic burst captions ---------- */
+/* Two hard rules:
+   1. Bubbles MUST wrap when text is long — no nowrap, no horizontal overflow.
+   2. Each bubble must be visually anchored ABOVE its character (so the
+      character itself is not hidden by the bubble).
+*/
+.speech-bubble {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  line-height: 1.15;
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  text-transform: uppercase;
+  text-shadow: none;
+  white-space: normal;       /* wrap long text */
+  word-wrap: break-word;
+  text-align: center;
+  padding: 7px 12px;
+}
+
+/* Mr. Interesting's bubble — anchored to the LEFT (above the hero) and
+   constrained so even the longest line ("TOGETHER WE'LL STOP THE BRAINROT")
+   wraps inside the room without ever clipping the left edge. */
+.speech-bubble.hero-bubble {
+  background: var(--neon-cyan);
+  top: 3%;
+  left: 4%;
+  right: auto;
+  transform: none;
+  max-width: 70%;
+}
+.speech-bubble.hero-bubble::after {
+  border-top-color: var(--ink);
+  bottom: -10px;
+  border-width: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Mr. 67's bubble — anchored to the RIGHT and lifted high above his head
+   so his body and face stay fully visible underneath. */
+.speech-bubble.villain-bubble {
+  background: var(--neon-pink);
+  color: var(--ink);
+  font-style: normal;
+  top: auto;
+  bottom: 54%;             /* villain head sits at ~47% from bottom */
+  right: 4%;
+  left: auto;
+  max-width: 56%;
+  transform: rotate(2deg);
+}
+.speech-bubble.villain-bubble::after {
+  border-top-color: var(--ink);
+  bottom: -10px;
+  border-width: 7px;
+  right: 18px;
+  left: auto;
+}
+
+/* ---------- "OWNED / PLACED / EQUIPPED" badges as comic stickers ---------- */
+.shop-item.owned::after,
+.shop-item.placed::after,
+.shop-item.equipped::after {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  border: 1.5px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 1.5px 1.5px 0 var(--ink);
+  padding: 3px 8px;
+  color: var(--ink);
+}
+.shop-item.owned::after    { background: var(--neon-green); }
+.shop-item.placed::after   { background: var(--neon-cyan); }
+.shop-item.equipped::after { background: var(--neon-yellow); }
+
+/* ---------- Top bar / nav as flat comic chrome ---------- */
+.topbar {
+  background: rgba(8, 8, 15, 0.92);
+  border-bottom: 2.5px solid var(--ink);
+  box-shadow: 0 3px 0 var(--neon-cyan);
+}
+.bottom-nav {
+  background: rgba(8, 8, 15, 0.96);
+  border-top: 2.5px solid var(--ink);
+  box-shadow: 0 -3px 0 var(--neon-magenta);
+}
+.nav-btn .nav-label {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.nav-btn.active {
+  text-shadow: 1px 1px 0 var(--ink);
+}
+.nav-btn.active::before {
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* ---------- Toast as comic stinger ---------- */
+.toast {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 15px;
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  background: var(--neon-yellow);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink), 0 0 20px rgba(255,204,0,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: none;
+  /* Never overflow the screen */
+  max-width: calc(100vw - 28px);
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* ---------- World meter bar styled as comic gauge ---------- */
+.meter-bar {
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  background: #14143a;
+  height: 14px;
+}
+.meter-fill { border-radius: 4px; }
+.meter-poles .hero-pole,
+.meter-poles .villain-pole {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-shadow: 1px 1px 0 var(--ink);
+}
+.meter-value {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 14px;
+  text-shadow: 1px 1px 0 var(--ink);
+}
+
+/* ---------- Timer styled as comic blast ---------- */
+.timer-text {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  -webkit-text-stroke: 1px var(--ink);
+  text-shadow:
+    3px 3px 0 var(--ink),
+    0 0 18px rgba(0,212,255,0.6);
+}
+
+/* ---------- Hero name with comic kerning ---------- */
+.hero-name {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 26px;
+  letter-spacing: 0.04em;
+  -webkit-text-stroke: 0.6px var(--ink);
+  text-shadow: 2px 2px 0 var(--ink), 0 0 12px rgba(0,212,255,0.5);
+  color: var(--neon-cyan);
+}
+
+/* ---------- Modal backdrop tinted neon ---------- */
+.modal {
+  background:
+    radial-gradient(rgba(0,212,255,0.08) 1.2px, transparent 1.5px) 0 0 / 14px 14px,
+    radial-gradient(circle at center, rgba(10,10,30,0.6) 0%, rgba(0,0,0,0.9) 100%);
+}
+
+/* Subtle paper-tear on the room edges */
+.room-wrap { position: relative; }
+.room-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1.5px);
+  background-size: 6px 6px;
+  mix-blend-mode: screen;
+}
+
+/* ====================================================================== */
+/* ====== SETTINGS SCREEN + GEAR BUTTON ====== */
+/* ====================================================================== */
+
+/* Topbar right side: wallet + gear button live together */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-btn {
+  background: rgba(0,212,255,0.06);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 0 var(--neon-cyan);
+  color: var(--neon-cyan);
+  transition: transform 0.08s;
+}
+.settings-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--neon-cyan);
+}
+.settings-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  filter: drop-shadow(0 0 4px rgba(0,212,255,0.6));
+}
+.settings-icon path,
+.settings-icon circle {
+  stroke: var(--neon-cyan);
+}
+
+/* Settings screen layout */
+#screen-settings {
+  padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+}
+.settings-section {
+  margin: 12px 18px 20px;
+  padding: 14px 16px;
+  background: rgba(15,7,30,0.85);
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 var(--neon-magenta);
+}
+.settings-section h3 {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--neon-cyan);
+  margin-bottom: 6px;
+  -webkit-text-stroke: 0.6px var(--ink);
+  text-shadow: 2px 2px 0 var(--ink);
+}
+.settings-section p.muted {
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.settings-section code {
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: monospace;
+  color: var(--neon-cyan);
+  font-size: 12px;
+}
+
+/* Empty-state placeholder used by allowed-list + picker */
+.empty-state {
+  padding: 14px 10px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--muted);
+  background: rgba(0,212,255,0.04);
+  border: 1.5px dashed rgba(0,212,255,0.25);
+  border-radius: 10px;
+  line-height: 1.5;
+}
+.empty-state strong { color: var(--neon-cyan); }
+
+/* ---------- Allowed-apps list (chips with real icons) ---------- */
+.allowed-apps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.allowed-app-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(0,212,255,0.08);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 3px 3px 0 var(--neon-cyan);
+}
+.allowed-app-icon-wrap {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid rgba(0,212,255,0.3);
+}
+.allowed-app-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.allowed-app-icon-fallback {
+  font-family: var(--font-comic);
+  font-size: 20px;
+  color: var(--neon-cyan);
+  text-shadow: 1px 1px 0 var(--ink);
+}
+.allowed-app-info {
+  flex: 1;
+  min-width: 0;
+}
+.allowed-app-name {
+  font-family: var(--font-comic);
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--text);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.allowed-app-pkg {
+  font-family: monospace;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.allowed-app-remove {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid var(--neon-pink);
+  color: var(--neon-pink);
+  font-size: 18px;
+  line-height: 1;
+  font-family: var(--font-display);
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 2px 2px 0 var(--neon-pink);
+  transition: transform 0.08s;
+}
+.allowed-app-remove:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--neon-pink);
+}
+
+/* ---------- App-picker modal ---------- */
+.modal-content.picker-content {
+  max-width: 460px;
+  width: 100%;
+  max-height: 82vh;
+  height: 82vh;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 14px 18px;
+  overflow: hidden;
+}
+.picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.picker-header h3 {
+  font-family: var(--font-comic);
+  font-size: 22px;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  -webkit-text-stroke: 0.6px var(--ink);
+  text-shadow: 2px 2px 0 var(--ink);
+  margin: 0;
+}
+.picker-search {
+  width: 100%;
+  margin: 12px 0 10px;
+  padding: 10px 14px;
+  background: rgba(0,212,255,0.06);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  box-shadow: 2px 2px 0 var(--neon-cyan);
+  flex-shrink: 0;
+}
+.picker-search:focus {
+  border-color: var(--neon-cyan);
+}
+.picker-search::placeholder {
+  color: var(--muted);
+}
+.picker-list {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.picker-list::-webkit-scrollbar { width: 4px; }
+.picker-list::-webkit-scrollbar-thumb {
+  background: rgba(0,212,255,0.3);
+  border-radius: 2px;
+}
+.picker-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  background: rgba(0,212,255,0.03);
+  border: 1.5px solid rgba(0,212,255,0.15);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.picker-row:active {
+  background: rgba(0,212,255,0.1);
+}
+.picker-row.on {
+  background: rgba(0,212,255,0.12);
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(0,212,255,0.2);
+}
+.picker-icon-wrap {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0,212,255,0.2);
+}
+.picker-app-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.picker-icon-fallback {
+  font-family: var(--font-comic);
+  font-size: 18px;
+  color: var(--neon-cyan);
+}
+.picker-app-info {
+  flex: 1;
+  min-width: 0;
+}
+.picker-app-name {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.picker-app-pkg {
+  font-family: monospace;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.picker-check {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--neon-cyan);
+  background: rgba(0,212,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--neon-cyan);
+}
+.picker-row.on .picker-check {
+  background: var(--neon-cyan);
+  color: var(--ink);
+}
+.ghost-btn.small {
+  padding: 6px 14px;
+  font-size: 11px;
+  border-width: 1.5px;
+  box-shadow: 2px 2px 0 var(--neon-magenta);
+}
+
+/* ====================================================================== */
+/* ====== FOCUS-SCREEN ENERGIZE FIELD ====== */
+/* Mr. Interesting "powering up / creating tech" — rendered behind the
+   focus-mode character while body.focus-active is on. Pure CSS so it
+   costs nothing on idle screens. */
+/* ====================================================================== */
+
+.focus-stage {
+  position: relative;     /* anchor for the energy field + particles */
+  overflow: visible;
+}
+.focus-energy-field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: none;
+  z-index: 0;
+}
+body.focus-active .focus-energy-field {
+  display: block;
+}
+.focus-character {
+  position: relative;
+  z-index: 2;             /* keep the hero on top of the energy field */
+}
+
+/* Pulsing energy aura — uses theme-driven RGB triplets so the user's
+   chosen primary + accent colours drive the glow during focus. */
+.energy-aura {
+  position: absolute;
+  inset: -25%;
+  background: radial-gradient(circle,
+    rgba(var(--primary-rgb), 0.45) 0%,
+    rgba(var(--primary-rgb), 0.18) 35%,
+    rgba(var(--accent-rgb),  0.10) 60%,
+    transparent 75%);
+  border-radius: 50%;
+  filter: blur(10px);
+  animation: focusAuraPulse 2.2s ease-in-out infinite;
+}
+@keyframes focusAuraPulse {
+  0%, 100% { transform: scale(0.88); opacity: 0.7; }
+  50%      { transform: scale(1.06); opacity: 1; }
+}
+
+/* Three rotating tech rings of different radii / colours / speeds */
+.energy-ring {
+  position: absolute;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.energy-ring.ring-1 {
+  inset: -8%;
+  border: 2px dashed rgba(var(--primary-rgb), 0.6);
+  box-shadow: 0 0 12px rgba(var(--primary-rgb), 0.55), inset 0 0 10px rgba(var(--primary-rgb), 0.3);
+  animation: focusRingSpin 9s linear infinite;
+}
+.energy-ring.ring-2 {
+  inset: -22%;
+  border: 1.5px dotted rgba(var(--accent-rgb), 0.6);
+  box-shadow: 0 0 14px rgba(var(--accent-rgb), 0.35);
+  animation: focusRingSpin 15s linear infinite reverse;
+}
+.energy-ring.ring-3 {
+  inset: -38%;
+  border: 1px solid rgba(var(--primary-rgb), 0.3);
+  animation: focusRingSpin 24s linear infinite;
+}
+@keyframes focusRingSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Crackling lightning bolts on either side */
+.energy-bolt {
+  position: absolute;
+  width: 2.5px;
+  background: linear-gradient(to bottom,
+    transparent, rgba(var(--primary-rgb), 0.95) 40%, rgba(var(--primary-rgb), 1) 60%, transparent 100%);
+  box-shadow: 0 0 8px rgba(var(--primary-rgb), 0.95);
+  opacity: 0;
+  border-radius: 1.5px;
+}
+.energy-bolt.bolt-1 {
+  height: 70px;
+  left: 14%;
+  top: 30%;
+  transform-origin: top center;
+  animation: focusBoltZap 1.6s ease-in-out infinite;
+}
+.energy-bolt.bolt-2 {
+  height: 60px;
+  right: 14%;
+  top: 38%;
+  transform-origin: top center;
+  animation: focusBoltZap 1.6s ease-in-out infinite 0.8s;
+}
+@keyframes focusBoltZap {
+  0%, 100% { opacity: 0; transform: rotate(8deg) scaleY(0.7); }
+  20%      { opacity: 1; transform: rotate(8deg) scaleY(1); }
+  45%      { opacity: 0; transform: rotate(8deg) scaleY(0.7); }
+}
+
+/* Energy particles drifting upward */
+.energy-particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 8px var(--neon-cyan);
+  opacity: 0;
+  bottom: 8%;
+  animation: focusParticleFloat 3.2s ease-in-out infinite;
+}
+.energy-particle.p-1 { left: 22%; animation-delay: 0s;    }
+.energy-particle.p-2 { left: 32%; animation-delay: 0.45s; }
+.energy-particle.p-3 { left: 42%; animation-delay: 0.9s;
+  background: var(--neon-magenta); box-shadow: 0 0 8px var(--neon-magenta); }
+.energy-particle.p-4 { left: 55%; animation-delay: 1.35s; }
+.energy-particle.p-5 { left: 68%; animation-delay: 1.8s;
+  background: var(--neon-magenta); box-shadow: 0 0 8px var(--neon-magenta); }
+.energy-particle.p-6 { left: 80%; animation-delay: 2.25s; }
+@keyframes focusParticleFloat {
+  0%   { opacity: 0; transform: translateY(0) scale(0.4); }
+  15%  { opacity: 1; transform: translateY(-30px) scale(1); }
+  85%  { opacity: 0.7; transform: translateY(-160px) scale(0.7); }
+  100% { opacity: 0; transform: translateY(-200px) scale(0.2); }
+}
+
+/* Extra glow on the hero himself while powering up — uses theme colour. */
+body.focus-active .character.focus-mode > svg {
+  filter:
+    drop-shadow(0 4px 12px rgba(0,0,0,0.5))
+    drop-shadow(0 0 22px rgba(var(--primary-rgb), 0.45))
+    drop-shadow(0 0 40px rgba(var(--primary-rgb), 0.2));
+}
+
+/* ====================================================================== */
+/* ====== VICTORY ATTACK ANIMATION ====== */
+/* Triggered on focus-session success: Mr. Interesting dashes from the left
+   side of the room, punches Mr. 67, POW! burst lands, villain reels back,
+   then the hero retreats to his post on the left. */
+/* ====================================================================== */
+
+.room.victory-attack #hero {
+  animation: heroVictoryDash 1.45s ease-in-out forwards;
+  z-index: 5;
+}
+@keyframes heroVictoryDash {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(105%); }
+  35%  { transform: translateX(115%) scale(1.06); }
+  50%  { transform: translateX(112%) scale(1.06); }
+  65%  { transform: translateX(108%); }
+  100% { transform: translateX(0); }
+}
+
+/* Hero's right arm winds back, then snaps forward into a punch */
+.room.victory-attack #hero svg .h-arm-r {
+  animation: heroPunchArm 1.45s ease-in-out forwards;
+}
+@keyframes heroPunchArm {
+  0%   { transform: rotate(0deg); }
+  18%  { transform: rotate(-45deg); }
+  30%  { transform: rotate(75deg); }
+  42%  { transform: rotate(90deg); }
+  55%  { transform: rotate(75deg); }
+  70%  { transform: rotate(20deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Villain gets knocked back at the impact moment */
+.room.victory-attack #mr67 {
+  animation: villainTakeHit 1.45s ease-in-out forwards;
+  z-index: 3;
+}
+@keyframes villainTakeHit {
+  0%, 33% { transform: translateX(0) rotate(0); }
+  38%     { transform: translateX(8px)  rotate(-6deg)  scale(0.97); }
+  46%     { transform: translateX(26px) rotate(-15deg) scale(0.93); }
+  55%     { transform: translateX(34px) rotate(-12deg); }
+  68%     { transform: translateX(22px) rotate(-6deg); }
+  82%     { transform: translateX(8px)  rotate(-2deg); }
+  100%    { transform: translateX(0) rotate(0); }
+}
+
+/* POW! comic burst — appears at the impact moment near Mr. 67's face */
+.pow-burst {
+  position: absolute;
+  top: 28%;
+  right: 14%;
+  z-index: 10;
+  pointer-events: none;
+  font-family: var(--font-comic);
+  font-size: 58px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--neon-yellow);
+  -webkit-text-stroke: 2px var(--ink);
+  text-shadow:
+    3px 3px 0 var(--ink),
+    0 0 20px rgba(255,204,0,0.7),
+    0 0 40px rgba(255,204,0,0.3);
+  opacity: 0;
+  user-select: none;
+}
+.pow-burst-text { display: inline-block; }
+.pow-burst.playing {
+  animation: powBurstPop 700ms cubic-bezier(.5,0,.3,1.4) forwards;
+}
+@keyframes powBurstPop {
+  0%   { opacity: 0; transform: scale(0.15) rotate(-30deg); }
+  25%  { opacity: 1; transform: scale(1.35) rotate(-12deg); }
+  60%  { opacity: 1; transform: scale(1.12) rotate(-6deg); }
+  100% { opacity: 0; transform: scale(1) rotate(0); }
+}
+.pow-burst.hidden { display: none !important; }
+
+/* ====================================================================== */
+/* ====== BUFF BADGES ON SHOP ITEMS ====== */
+/* Each item now shows a small badge explaining its boost. */
+/* ====================================================================== */
+.item-buff-chip {
+  display: inline-block;
+  margin: 2px auto 4px;
+  padding: 3px 8px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-radius: 8px;
+  background: rgba(0,255,136,0.12);
+  color: var(--neon-green);
+  border: 1px solid rgba(0,255,136,0.35);
+  text-shadow: 0 0 4px rgba(0,255,136,0.35);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.shop-item.has-buff { /* slight green tint on the card border */
+  box-shadow: 4px 4px 0 var(--neon-magenta), 0 0 8px rgba(0,255,136,0.15);
+}
+
+/* ====================================================================== */
+/* ====== THEME PICKER ====== */
+/* ====================================================================== */
+.theme-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.theme-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px 8px;
+  background: rgba(0,212,255,0.04);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: var(--font-comic);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-soft);
+  box-shadow: 2px 2px 0 rgba(0,212,255,0.4);
+  transition: transform 0.08s, box-shadow 0.1s, border-color 0.15s;
+}
+.theme-swatch:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(0,212,255,0.4);
+}
+.theme-swatch.selected {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: 2px 2px 0 var(--neon-cyan), 0 0 12px rgba(0,212,255,0.35);
+}
+.theme-swatch-colors {
+  display: flex;
+  width: 100%;
+  height: 28px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid var(--ink);
+}
+.theme-swatch-half {
+  flex: 1;
+  display: block;
+}
+.theme-swatch-name {
+  font-family: var(--font-comic);
+  font-size: 11px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.theme-custom-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.theme-custom-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-comic);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text-soft);
+  text-transform: uppercase;
+}
+.theme-custom-label input[type="color"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 38px;
+  height: 38px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(0,212,255,0.4);
+}
+.theme-custom-label input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.theme-custom-label input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+.theme-custom-label input[type="color"]::-moz-color-swatch { border: none; border-radius: 6px; }
+#themeResetBtn { margin-left: auto; }
+
+/* ====================================================================== */
+/* ====== CREATIVE PER-SKIN EMOTES (full body joints) ====== */
+/* Every skin has a distinct emote driven by 1-5 joints (shoulders, elbows,
+   hips, knees) + optional body motion. Naming convention:
+     .character.emote-<skin-key> svg .<joint> { animation: ... }
+   The "<skin-key>" matches the value in SKIN_SIGNATURE_EMOTE in app.js. */
+
+/* ---------- CLASSIC HERO ---------- right fist UP, left hand on hip, chest puff. */
+@keyframes em_classic_armR     { 0%{transform:rotate(0)} 20%{transform:rotate(-170deg)} 80%{transform:rotate(-170deg)} 100%{transform:rotate(0)} }
+@keyframes em_classic_armL     { 0%{transform:rotate(0)} 20%{transform:rotate(70deg)} 80%{transform:rotate(70deg)} 100%{transform:rotate(0)} }
+@keyframes em_classic_forearmL { 0%{transform:rotate(0)} 20%{transform:rotate(-100deg)} 80%{transform:rotate(-100deg)} 100%{transform:rotate(0)} }
+@keyframes em_classic_body     { 0%,100%{transform:scale(1)} 30%,70%{transform:scale(1.06)} }
+.character.emote-classic-pose svg .h-arm-r     { animation: em_classic_armR 2s ease-in-out 1; }
+.character.emote-classic-pose svg .h-arm-l     { animation: em_classic_armL 2s ease-in-out 1; }
+.character.emote-classic-pose svg .h-forearm-l { animation: em_classic_forearmL 2s ease-in-out 1; }
+.character.emote-classic-pose > svg            { animation: em_classic_body 2s ease-in-out 1 !important; }
+
+/* ---------- DETECTIVE — Investigating sweep (multi-beat lookup with body lean). */
+@keyframes em_det_armR        { 0%{transform:rotate(0)} 15%{transform:rotate(-90deg)} 30%{transform:rotate(-75deg)} 45%{transform:rotate(-105deg)} 60%{transform:rotate(-80deg)} 80%{transform:rotate(-90deg)} 100%{transform:rotate(0)} }
+@keyframes em_det_forearmR    { 0%{transform:rotate(0)} 20%{transform:rotate(75deg)} 35%{transform:rotate(50deg)} 50%{transform:rotate(95deg)} 65%{transform:rotate(70deg)} 80%{transform:rotate(75deg)} 100%{transform:rotate(0)} }
+@keyframes em_det_armL        { 0%{transform:rotate(0)} 25%{transform:rotate(60deg)} 75%{transform:rotate(45deg)} 100%{transform:rotate(0)} }
+@keyframes em_det_forearmL    { 0%{transform:rotate(0)} 25%{transform:rotate(-100deg)} 75%{transform:rotate(-90deg)} 100%{transform:rotate(0)} }
+@keyframes em_det_body        { 0%,100%{transform:rotate(0) translateY(0)} 20%{transform:rotate(-8deg) translateY(-2px)} 50%{transform:rotate(-10deg) translateY(-4px)} 80%{transform:rotate(-6deg)} }
+.character.emote-detective-point svg .h-arm-r     { animation: em_det_armR 1.8s ease-in-out 1; }
+.character.emote-detective-point svg .h-forearm-r { animation: em_det_forearmR 1.8s ease-in-out 1; }
+.character.emote-detective-point svg .h-arm-l     { animation: em_det_armL 1.8s ease-in-out 1; }
+.character.emote-detective-point svg .h-forearm-l { animation: em_det_forearmL 1.8s ease-in-out 1; }
+.character.emote-detective-point > svg            { animation: em_det_body 1.8s ease-in-out 1 !important; }
+
+/* ---------- SCHOLAR — Double Eureka bounce: two excited fist pumps. */
+@keyframes em_sch_armR     { 0%{transform:rotate(0)} 15%{transform:rotate(-165deg)} 30%{transform:rotate(-100deg)} 50%{transform:rotate(-170deg)} 70%{transform:rotate(-110deg)} 100%{transform:rotate(0)} }
+@keyframes em_sch_forearmR { 0%{transform:rotate(0)} 18%{transform:rotate(-25deg)} 50%{transform:rotate(-30deg)} 100%{transform:rotate(0)} }
+@keyframes em_sch_armL     { 0%{transform:rotate(0)} 15%{transform:rotate(150deg)} 30%{transform:rotate(85deg)} 50%{transform:rotate(155deg)} 70%{transform:rotate(95deg)} 100%{transform:rotate(0)} }
+@keyframes em_sch_forearmL { 0%{transform:rotate(0)} 18%{transform:rotate(25deg)} 50%{transform:rotate(30deg)} 100%{transform:rotate(0)} }
+@keyframes em_sch_body     { 0%,100%{transform:translateY(0) rotate(0)} 15%{transform:translateY(-7px) rotate(2deg)} 30%{transform:translateY(-2px)} 50%{transform:translateY(-8px) rotate(-2deg)} 70%{transform:translateY(-3px)} }
+.character.emote-scholar-eureka svg .h-arm-r     { animation: em_sch_armR 2s ease-in-out 1; }
+.character.emote-scholar-eureka svg .h-forearm-r { animation: em_sch_forearmR 2s ease-in-out 1; }
+.character.emote-scholar-eureka svg .h-arm-l     { animation: em_sch_armL 2s ease-in-out 1; }
+.character.emote-scholar-eureka svg .h-forearm-l { animation: em_sch_forearmL 2s ease-in-out 1; }
+.character.emote-scholar-eureka > svg            { animation: em_sch_body 2s ease-in-out 1 !important; }
+
+/* ---------- WIZARD — Big swirl windup → THRUST cast finish. */
+@keyframes em_wiz_armR     { 0%{transform:rotate(0)} 20%{transform:rotate(-35deg)} 40%{transform:rotate(-120deg)} 55%{transform:rotate(-90deg)} 70%{transform:rotate(-160deg)} 100%{transform:rotate(0)} }
+@keyframes em_wiz_forearmR { 0%{transform:rotate(0)} 25%{transform:rotate(-60deg)} 45%{transform:rotate(20deg)} 70%{transform:rotate(-40deg)} 100%{transform:rotate(0)} }
+@keyframes em_wiz_armL     { 0%{transform:rotate(0)} 20%{transform:rotate(35deg)} 40%{transform:rotate(120deg)} 55%{transform:rotate(90deg)} 70%{transform:rotate(160deg)} 100%{transform:rotate(0)} }
+@keyframes em_wiz_forearmL { 0%{transform:rotate(0)} 25%{transform:rotate(60deg)} 45%{transform:rotate(-20deg)} 70%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+@keyframes em_wiz_body     { 0%{transform:translateY(0); filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 6px rgba(var(--accent-rgb),0.3))} 25%{transform:translateY(-4px); filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 14px rgba(var(--accent-rgb),0.5))} 50%{transform:translateY(-9px); filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 26px rgba(var(--accent-rgb),0.75))} 75%{transform:translateY(-14px) scale(1.05); filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 48px rgba(var(--accent-rgb),1)) drop-shadow(0 0 90px rgba(var(--accent-rgb),0.5))} 100%{transform:translateY(0); filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5)) drop-shadow(0 0 6px rgba(var(--accent-rgb),0.3))} }
+.character.emote-wizard-cast svg .h-arm-r     { animation: em_wiz_armR 2.2s ease-in-out 1; }
+.character.emote-wizard-cast svg .h-forearm-r { animation: em_wiz_forearmR 2.2s ease-in-out 1; }
+.character.emote-wizard-cast svg .h-arm-l     { animation: em_wiz_armL 2.2s ease-in-out 1; }
+.character.emote-wizard-cast svg .h-forearm-l { animation: em_wiz_forearmL 2.2s ease-in-out 1; }
+.character.emote-wizard-cast > svg            { animation: em_wiz_body 2.2s ease-in-out 1 !important; }
+
+/* ---------- ASTRONAUT — Tumble: tuck knees, spin body, splay limbs. */
+@keyframes em_astro_body { 0%,100%{transform:translateY(0) rotate(0)} 25%{transform:translateY(-10px) rotate(-15deg)} 50%{transform:translateY(-18px) rotate(0deg) scale(0.96)} 75%{transform:translateY(-10px) rotate(15deg)} }
+@keyframes em_astro_legL { 0%,100%{transform:rotate(0)} 30%{transform:rotate(50deg)} 55%{transform:rotate(-30deg)} 80%{transform:rotate(20deg)} }
+@keyframes em_astro_legR { 0%,100%{transform:rotate(0)} 30%{transform:rotate(-50deg)} 55%{transform:rotate(30deg)} 80%{transform:rotate(-20deg)} }
+@keyframes em_astro_shinL { 0%,100%{transform:rotate(0)} 45%{transform:rotate(80deg)} 75%{transform:rotate(20deg)} }
+@keyframes em_astro_shinR { 0%,100%{transform:rotate(0)} 45%{transform:rotate(-80deg)} 75%{transform:rotate(-20deg)} }
+@keyframes em_astro_armL { 0%,100%{transform:rotate(0)} 25%{transform:rotate(70deg)} 55%{transform:rotate(-60deg)} 80%{transform:rotate(30deg)} }
+@keyframes em_astro_armR { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-70deg)} 55%{transform:rotate(60deg)} 80%{transform:rotate(-30deg)} }
+@keyframes em_astro_forearmL { 0%,100%{transform:rotate(0)} 40%{transform:rotate(60deg)} 70%{transform:rotate(-40deg)} }
+@keyframes em_astro_forearmR { 0%,100%{transform:rotate(0)} 40%{transform:rotate(-60deg)} 70%{transform:rotate(40deg)} }
+.character.emote-astro-float > svg              { animation: em_astro_body 2.6s ease-in-out 1 !important; }
+.character.emote-astro-float svg .h-leg-l       { animation: em_astro_legL 2.6s ease-in-out 1; }
+.character.emote-astro-float svg .h-leg-r       { animation: em_astro_legR 2.6s ease-in-out 1; }
+.character.emote-astro-float svg .h-shin-l      { animation: em_astro_shinL 2.6s ease-in-out 1; }
+.character.emote-astro-float svg .h-shin-r      { animation: em_astro_shinR 2.6s ease-in-out 1; }
+.character.emote-astro-float svg .h-arm-l       { animation: em_astro_armL 2.6s ease-in-out 1; }
+.character.emote-astro-float svg .h-arm-r       { animation: em_astro_armR 2.6s ease-in-out 1; }
+.character.emote-astro-float svg .h-forearm-l   { animation: em_astro_forearmL 2.6s ease-in-out 1; }
+.character.emote-astro-float svg .h-forearm-r   { animation: em_astro_forearmR 2.6s ease-in-out 1; }
+
+/* ---------- SIGMA — Lean → flex right bicep → settle into arms-crossed. */
+@keyframes em_sig_body     { 0%,100%{transform:translateX(0) rotate(0)} 18%{transform:translateX(-4px) rotate(-4deg)} 40%{transform:translateX(-2px) rotate(-2deg)} 65%{transform:translateX(2px) rotate(2deg)} 85%{transform:rotate(-1deg)} }
+@keyframes em_sig_armR     { 0%{transform:rotate(0)} 18%{transform:rotate(-30deg)} 35%{transform:rotate(-100deg)} 55%{transform:rotate(-30deg)} 75%{transform:rotate(-30deg)} 100%{transform:rotate(0)} }
+@keyframes em_sig_forearmR { 0%{transform:rotate(0)} 35%{transform:rotate(-130deg)} 55%{transform:rotate(-130deg)} 75%{transform:rotate(105deg)} 100%{transform:rotate(0)} }
+@keyframes em_sig_armL     { 0%{transform:rotate(0)} 35%{transform:rotate(40deg)} 55%{transform:rotate(30deg)} 75%{transform:rotate(30deg)} 100%{transform:rotate(0)} }
+@keyframes em_sig_forearmL { 0%{transform:rotate(0)} 55%{transform:rotate(-60deg)} 75%{transform:rotate(-105deg)} 100%{transform:rotate(0)} }
+.character.emote-sigma-crossed > svg            { animation: em_sig_body 2.1s ease-in-out 1 !important; }
+.character.emote-sigma-crossed svg .h-arm-r     { animation: em_sig_armR 2.1s ease-in-out 1; }
+.character.emote-sigma-crossed svg .h-forearm-r { animation: em_sig_forearmR 2.1s ease-in-out 1; }
+.character.emote-sigma-crossed svg .h-arm-l     { animation: em_sig_armL 2.1s ease-in-out 1; }
+.character.emote-sigma-crossed svg .h-forearm-l { animation: em_sig_forearmL 2.1s ease-in-out 1; }
+
+/* ---------- KNIGHT — 3-hit combo: wind-up → overhead → diagonal → forward thrust. */
+@keyframes em_kn_armR     { 0%{transform:rotate(0)} 12%{transform:rotate(-35deg)} 24%{transform:rotate(-180deg)} 38%{transform:rotate(-70deg)} 52%{transform:rotate(-160deg)} 66%{transform:rotate(-60deg)} 80%{transform:rotate(-100deg)} 100%{transform:rotate(0)} }
+@keyframes em_kn_forearmR { 0%{transform:rotate(0)} 24%{transform:rotate(-20deg)} 38%{transform:rotate(60deg)} 52%{transform:rotate(-20deg)} 66%{transform:rotate(70deg)} 80%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+@keyframes em_kn_armL     { 0%{transform:rotate(0)} 30%{transform:rotate(75deg)} 60%{transform:rotate(85deg)} 100%{transform:rotate(0)} }
+@keyframes em_kn_forearmL { 0%{transform:rotate(0)} 30%{transform:rotate(-50deg)} 60%{transform:rotate(-40deg)} 100%{transform:rotate(0)} }
+@keyframes em_kn_legR     { 0%,100%{transform:rotate(0)} 38%{transform:rotate(-30deg)} 66%{transform:rotate(-25deg)} }
+@keyframes em_kn_shinR    { 0%,100%{transform:rotate(0)} 38%{transform:rotate(25deg)} 66%{transform:rotate(20deg)} }
+@keyframes em_kn_body     { 0%,100%{transform:rotate(0) translateY(0)} 24%{transform:rotate(-3deg) translateY(-2px)} 38%{transform:rotate(5deg) translateY(2px)} 52%{transform:rotate(-2deg) translateY(-3px)} 66%{transform:rotate(6deg) translateY(2px)} }
+.character.emote-knight-strike svg .h-arm-r     { animation: em_kn_armR 2s ease-in-out 1; }
+.character.emote-knight-strike svg .h-forearm-r { animation: em_kn_forearmR 2s ease-in-out 1; }
+.character.emote-knight-strike svg .h-arm-l     { animation: em_kn_armL 2s ease-in-out 1; }
+.character.emote-knight-strike svg .h-forearm-l { animation: em_kn_forearmL 2s ease-in-out 1; }
+.character.emote-knight-strike svg .h-leg-r     { animation: em_kn_legR 2s ease-in-out 1; }
+.character.emote-knight-strike svg .h-shin-r    { animation: em_kn_shinR 2s ease-in-out 1; }
+.character.emote-knight-strike > svg            { animation: em_kn_body 2s ease-in-out 1 !important; }
+
+/* ---------- POP STAR — Sideways MOONWALK with hat tip on the first beat. */
+@keyframes em_pop_body     { 0%{transform:translateX(0) rotate(0)} 15%{transform:translateX(-3px) rotate(-2deg)} 30%{transform:translateX(-10px)} 45%{transform:translateX(-18px) rotate(-3deg)} 60%{transform:translateX(-26px)} 75%{transform:translateX(-14px) rotate(0deg)} 90%{transform:translateX(-4px)} 100%{transform:translateX(0)} }
+@keyframes em_pop_legR     { 0%,100%{transform:rotate(0)} 18%{transform:rotate(-22deg)} 30%{transform:rotate(8deg)} 48%{transform:rotate(-20deg)} 60%{transform:rotate(10deg)} 80%{transform:rotate(-6deg)} }
+@keyframes em_pop_shinR    { 0%,100%{transform:rotate(0)} 18%{transform:rotate(40deg)} 30%{transform:rotate(-5deg)} 48%{transform:rotate(38deg)} 60%{transform:rotate(-5deg)} 80%{transform:rotate(20deg)} }
+@keyframes em_pop_legL     { 0%,100%{transform:rotate(0)} 25%{transform:rotate(12deg)} 38%{transform:rotate(-18deg)} 55%{transform:rotate(15deg)} 68%{transform:rotate(-16deg)} 85%{transform:rotate(5deg)} }
+@keyframes em_pop_shinL    { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-8deg)} 38%{transform:rotate(38deg)} 55%{transform:rotate(-8deg)} 68%{transform:rotate(35deg)} 85%{transform:rotate(15deg)} }
+@keyframes em_pop_armR     { 0%{transform:rotate(0)} 15%{transform:rotate(-150deg)} 30%{transform:rotate(-40deg)} 50%{transform:rotate(20deg)} 70%{transform:rotate(-35deg)} 85%{transform:rotate(10deg)} 100%{transform:rotate(0)} }
+@keyframes em_pop_forearmR { 0%{transform:rotate(0)} 15%{transform:rotate(40deg)} 35%{transform:rotate(0deg)} 100%{transform:rotate(0)} }
+@keyframes em_pop_armL     { 0%{transform:rotate(0)} 30%{transform:rotate(45deg)} 50%{transform:rotate(-30deg)} 70%{transform:rotate(40deg)} 85%{transform:rotate(-10deg)} 100%{transform:rotate(0)} }
+.character.emote-popstar-heel > svg            { animation: em_pop_body 2.4s cubic-bezier(.4,.1,.6,.95) 1 !important; }
+.character.emote-popstar-heel svg .h-leg-r     { animation: em_pop_legR 2.4s ease-in-out 1; }
+.character.emote-popstar-heel svg .h-shin-r    { animation: em_pop_shinR 2.4s ease-in-out 1; }
+.character.emote-popstar-heel svg .h-leg-l     { animation: em_pop_legL 2.4s ease-in-out 1; }
+.character.emote-popstar-heel svg .h-shin-l    { animation: em_pop_shinL 2.4s ease-in-out 1; }
+.character.emote-popstar-heel svg .h-arm-r     { animation: em_pop_armR 2.4s ease-in-out 1; }
+.character.emote-popstar-heel svg .h-forearm-r { animation: em_pop_forearmR 2.4s ease-in-out 1; }
+.character.emote-popstar-heel svg .h-arm-l     { animation: em_pop_armL 2.4s ease-in-out 1; }
+
+/* ---------- MARTIAL ARTIST — JUMP-KICK then two sideways punches.
+   Beats: 0-30% wind-up + LEAP, 30-50% airborne KICK landing on the right,
+   50-70% RIGHT sideways punch, 70-90% LEFT sideways punch, 90-100% recover. */
+@keyframes em_mart_body     {
+  0%   { transform: translateY(0) rotate(0); }
+  15%  { transform: translateY(4px) rotate(0); }                /* crouch */
+  30%  { transform: translateY(-22px) rotate(-2deg); }          /* leap UP */
+  45%  { transform: translateY(-26px) rotate(2deg); }           /* peak */
+  60%  { transform: translateY(-8px) rotate(0); }               /* land */
+  70%  { transform: translateY(-4px) rotate(-6deg); }           /* lean right for jab */
+  85%  { transform: translateY(-4px) rotate(6deg); }            /* lean left for hook */
+  100% { transform: translateY(0) rotate(0); }
+}
+/* Right leg — full extension forward for the jump kick during the leap, then back. */
+@keyframes em_mart_legR {
+  0%   { transform: rotate(0); }
+  15%  { transform: rotate(8deg); }
+  30%  { transform: rotate(-60deg); }
+  45%  { transform: rotate(-110deg); }   /* leg extended out for kick */
+  55%  { transform: rotate(-70deg); }
+  70%  { transform: rotate(0); }
+  100% { transform: rotate(0); }
+}
+@keyframes em_mart_shinR {
+  0%   { transform: rotate(0); }
+  15%  { transform: rotate(45deg); }
+  30%  { transform: rotate(20deg); }
+  45%  { transform: rotate(0deg); }       /* straightened on impact */
+  55%  { transform: rotate(15deg); }
+  70%  { transform: rotate(0); }
+  100% { transform: rotate(0); }
+}
+/* Left leg — crouches then tucks under during leap. */
+@keyframes em_mart_legL {
+  0%, 100% { transform: rotate(0); }
+  15%      { transform: rotate(12deg); }
+  30%      { transform: rotate(30deg); }
+  45%      { transform: rotate(35deg); }
+}
+@keyframes em_mart_shinL {
+  0%, 100% { transform: rotate(0); }
+  15%      { transform: rotate(60deg); }
+  30%      { transform: rotate(80deg); }
+  45%      { transform: rotate(75deg); }
+}
+/* Right arm — guard during leap, then SIDEWAYS jab between 55%-70%. */
+@keyframes em_mart_armR {
+  0%   { transform: rotate(0); }
+  15%  { transform: rotate(-40deg); }
+  30%  { transform: rotate(-70deg); }     /* arm raised in guard */
+  45%  { transform: rotate(-50deg); }
+  55%  { transform: rotate(-90deg); }     /* jab WIND-up to the side */
+  65%  { transform: rotate(-110deg); }    /* jab fully out sideways */
+  75%  { transform: rotate(-80deg); }
+  100% { transform: rotate(0); }
+}
+@keyframes em_mart_forearmR {
+  0%   { transform: rotate(0); }
+  15%  { transform: rotate(-40deg); }
+  30%  { transform: rotate(-60deg); }
+  45%  { transform: rotate(-30deg); }
+  55%  { transform: rotate(-30deg); }
+  65%  { transform: rotate(20deg); }      /* fist extended out */
+  75%  { transform: rotate(-30deg); }
+  100% { transform: rotate(0); }
+}
+/* Left arm — guard during leap, then SIDEWAYS hook between 75%-90%. */
+@keyframes em_mart_armL {
+  0%   { transform: rotate(0); }
+  15%  { transform: rotate(40deg); }
+  30%  { transform: rotate(70deg); }
+  45%  { transform: rotate(50deg); }
+  55%  { transform: rotate(60deg); }
+  75%  { transform: rotate(90deg); }      /* hook wind-up */
+  85%  { transform: rotate(110deg); }     /* hook fully out sideways */
+  100% { transform: rotate(0); }
+}
+@keyframes em_mart_forearmL {
+  0%   { transform: rotate(0); }
+  15%  { transform: rotate(40deg); }
+  30%  { transform: rotate(60deg); }
+  45%  { transform: rotate(30deg); }
+  55%  { transform: rotate(40deg); }
+  75%  { transform: rotate(30deg); }
+  85%  { transform: rotate(-20deg); }    /* fist extended */
+  100% { transform: rotate(0); }
+}
+.character.emote-martial-kick svg .h-arm-r     { animation: em_mart_armR 2.4s ease-in-out 1; }
+.character.emote-martial-kick svg .h-forearm-r { animation: em_mart_forearmR 2.4s ease-in-out 1; }
+.character.emote-martial-kick svg .h-arm-l     { animation: em_mart_armL 2.4s ease-in-out 1; }
+.character.emote-martial-kick svg .h-forearm-l { animation: em_mart_forearmL 2.4s ease-in-out 1; }
+.character.emote-martial-kick svg .h-leg-r     { animation: em_mart_legR 2.4s ease-in-out 1; }
+.character.emote-martial-kick svg .h-shin-r    { animation: em_mart_shinR 2.4s ease-in-out 1; }
+.character.emote-martial-kick svg .h-leg-l     { animation: em_mart_legL 2.4s ease-in-out 1; }
+.character.emote-martial-kick svg .h-shin-l    { animation: em_mart_shinL 2.4s ease-in-out 1; }
+.character.emote-martial-kick > svg            { animation: em_mart_body 2.4s ease-in-out 1 !important; }
+
+/* ---------- NEON DJ — Bouncing scratch with hand POP and rhythmic leg tap. */
+@keyframes em_dj_body     { 0%,100%{transform:translateY(0)} 12%{transform:translateY(-5px)} 24%{transform:translateY(0)} 36%{transform:translateY(-5px) scaleY(0.97)} 48%{transform:translateY(0)} 60%{transform:translateY(-5px)} 72%{transform:translateY(0) scaleY(0.97)} 86%{transform:translateY(-3px)} }
+@keyframes em_dj_armR     { 0%{transform:rotate(0)} 15%{transform:rotate(-25deg)} 80%{transform:rotate(-25deg)} 100%{transform:rotate(0)} }
+@keyframes em_dj_forearmR { 0%{transform:rotate(0)} 18%{transform:rotate(-60deg)} 28%{transform:rotate(10deg)} 38%{transform:rotate(-60deg)} 48%{transform:rotate(10deg)} 58%{transform:rotate(-60deg)} 68%{transform:rotate(10deg)} 78%{transform:rotate(-60deg)} 100%{transform:rotate(0)} }
+@keyframes em_dj_armL     { 0%{transform:rotate(0)} 12%{transform:rotate(110deg)} 30%{transform:rotate(145deg)} 50%{transform:rotate(110deg)} 70%{transform:rotate(145deg)} 88%{transform:rotate(80deg)} 100%{transform:rotate(0)} }
+@keyframes em_dj_forearmL { 0%{transform:rotate(0)} 30%{transform:rotate(30deg)} 50%{transform:rotate(0deg)} 70%{transform:rotate(30deg)} 100%{transform:rotate(0)} }
+@keyframes em_dj_legL     { 0%,100%{transform:rotate(0)} 24%{transform:rotate(15deg)} 48%{transform:rotate(0)} 72%{transform:rotate(15deg)} }
+@keyframes em_dj_shinL    { 0%,100%{transform:rotate(0)} 24%{transform:rotate(-25deg)} 48%{transform:rotate(0)} 72%{transform:rotate(-25deg)} }
+@keyframes em_dj_legR     { 0%,100%{transform:rotate(0)} 36%{transform:rotate(-10deg)} 60%{transform:rotate(-10deg)} }
+.character.emote-dj-roll > svg              { animation: em_dj_body 2s ease-in-out 1 !important; }
+.character.emote-dj-roll svg .h-arm-r       { animation: em_dj_armR 2s ease-in-out 1; }
+.character.emote-dj-roll svg .h-forearm-r   { animation: em_dj_forearmR 2s ease-in-out 1; }
+.character.emote-dj-roll svg .h-arm-l       { animation: em_dj_armL 2s ease-in-out 1; }
+.character.emote-dj-roll svg .h-forearm-l   { animation: em_dj_forearmL 2s ease-in-out 1; }
+.character.emote-dj-roll svg .h-leg-l       { animation: em_dj_legL 2s ease-in-out 1; }
+.character.emote-dj-roll svg .h-shin-l      { animation: em_dj_shinL 2s ease-in-out 1; }
+.character.emote-dj-roll svg .h-leg-r       { animation: em_dj_legR 2s ease-in-out 1; }
+
+/* ====== SHOP / HERO MENU AUTO-EMOTE ====== */
+/* Outfit-preview characters are tiny (64×80px) and don't get arm anchors
+   exactly aligned to room-character coordinates. The same transform-origin
+   selectors apply because the SVG viewBox is the same. Below we re-enable
+   animation on outfit-preview characters so the auto-emote loop can drive
+   them — the default rule (animation: none) is overridden by !important
+   on each emote class. */
+.outfit-preview .character.in-emote > svg {
+  animation-play-state: running;
+}
+/* The currently-emoting card glows softly so the rotation is obvious. */
+.outfit-preview .character.in-emote {
+  filter: drop-shadow(0 0 12px rgba(var(--primary-rgb), 0.35));
+}
+
+/* ====================================================================== */
+/* ====== FOCUS-DURATION SLIDER ====== */
+/* Replaces the row of 5/15/25/45/60/90/120 chips with a continuous slider
+   that snaps to 5-minute increments. The legacy chip buttons remain in the
+   DOM (with .hidden) so test selectors keep working. */
+/* ====================================================================== */
+.duration-picker { flex-direction: column; gap: 10px; }
+.duration-slider-wrap {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 4px 0;
+}
+.duration-slider-readout {
+  font-family: var(--font-comic);
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--neon-cyan);
+  letter-spacing: 0.04em;
+  -webkit-text-stroke: 0.6px var(--ink);
+  text-shadow: 2px 2px 0 var(--ink), 0 0 12px rgba(var(--primary-rgb), 0.4);
+  line-height: 1;
+}
+.duration-unit {
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  color: var(--text-soft);
+  text-shadow: 1px 1px 0 var(--ink);
+}
+.duration-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 12px;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: linear-gradient(90deg,
+    rgba(var(--primary-rgb), 0.7) 0%,
+    rgba(var(--primary-rgb), 0.7) var(--slider-progress, 17%),
+    rgba(0, 212, 255, 0.05) var(--slider-progress, 17%),
+    rgba(0, 212, 255, 0.05) 100%);
+  box-shadow: 2px 2px 0 rgba(var(--primary-rgb), 0.5),
+              inset 0 0 6px rgba(0, 0, 0, 0.4);
+  outline: none;
+  cursor: pointer;
+}
+.duration-slider:disabled { opacity: 0.4; cursor: not-allowed; }
+/* WebKit thumb */
+.duration-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink), 0 0 12px rgba(var(--primary-rgb), 0.6);
+  cursor: pointer;
+  margin-top: -9px;
+  transition: transform 0.08s;
+}
+.duration-slider::-webkit-slider-thumb:active { transform: scale(1.1); }
+/* Firefox thumb */
+.duration-slider::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink), 0 0 12px rgba(var(--primary-rgb), 0.6);
+  cursor: pointer;
+}
+.duration-slider::-moz-range-track {
+  height: 8px;
+  background: transparent;
+  border-radius: 999px;
+}
+.duration-ticks {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-family: var(--font-comic);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  padding: 0 4px;
+}
+
+/* ====================================================================== */
+/* ====== EXTENDED OUTFITS — colour tokens + unique emotes ====== */
+/* ====================================================================== */
+
+.character[data-skin="pirate"] { --sweater: #3a1a14; --sweater-shadow: #1a0808; --sweater-light: #5a2a20; --bowtie-color: #c8a020; --cape-color: #1a0a08; --hair: #3a2a1c; }
+.character[data-skin="chef"] { --sweater: #f0f0f0; --sweater-shadow: #a8a8a8; --sweater-light: #ffffff; --bowtie-color: #c84a3a; --cape-color: #e0e0e0; --hair: #3a2a1c; }
+.character[data-skin="police"] { --sweater: #1a3a8a; --sweater-shadow: #0a1a4a; --sweater-light: #3a5aaa; --bowtie-color: #c8a020; --cape-color: #0a1a4a; --hair: #3a2a1c; }
+.character[data-skin="soldier"] { --sweater: #3a4a2a; --sweater-shadow: #1a2a0a; --sweater-light: #5a6a4a; --bowtie-color: #3a2a1c; --cape-color: #3a4a2a; --hair: #3a2a1c; }
+.character[data-skin="skater"] { --sweater: #3a3a3a; --sweater-shadow: #1a1a1a; --sweater-light: #5a5a5a; --bowtie-color: #c84a8a; --cape-color: #1a1a1a; --hair: #1a0e08; }
+.character[data-skin="cyclist"] { --sweater: #3a4aa8; --sweater-shadow: #1a2a68; --sweater-light: #5a6ad8; --bowtie-color: #c8a020; --cape-color: #1a2a68; --hair: #3a2a1c; }
+.character[data-skin="musician"] { --sweater: #5a3a8a; --sweater-shadow: #2a1a4a; --sweater-light: #7a5aaa; --bowtie-color: #c8a020; --cape-color: #2a1a4a; --hair: #3a2a1c; }
+.character[data-skin="hacker"] { --sweater: #0a3a1a; --sweater-shadow: #04200a; --sweater-light: #1a6a3a; --bowtie-color: #00ff88; --cape-color: #04200a; --hair: #0a0606; }
+.character[data-skin="vampire"] { --sweater: #1a0a1a; --sweater-shadow: #080408; --sweater-light: #3a1a3a; --bowtie-color: #c80020; --cape-color: #1a0a1a; --hair: #0a0606; }
+.character[data-skin="ghost"] { --sweater: #e8e8f0; --sweater-shadow: #a0a0b0; --sweater-light: #ffffff; --bowtie-color: #3a3a5a; --cape-color: #e8e8f0; --hair: #0a0606; }
+.character[data-skin="robot"] { --sweater: #a0a0a8; --sweater-shadow: #5a5a60; --sweater-light: #d0d0d8; --bowtie-color: #00d4ff; --cape-color: #5a5a60; --hair: #0a0606; }
+.character[data-skin="timetraveler"] { --sweater: #3a3a6a; --sweater-shadow: #1a1a3a; --sweater-light: #5a5a8a; --bowtie-color: #00ffcc; --cape-color: #1a1a3a; --hair: #3a2a1c; }
+.character[data-skin="disco"] { --sweater: #c8a020; --sweater-shadow: #8a6a08; --sweater-light: #f0c850; --bowtie-color: #ff00aa; --cape-color: #8a6a08; --hair: #3a2a1c; }
+.character[data-skin="punk"] { --sweater: #1a1a1a; --sweater-shadow: #000000; --sweater-light: #3a3a3a; --bowtie-color: #ff00aa; --cape-color: #1a1a1a; --hair: #ff00aa; }
+.character[data-skin="jobsstyle"] { --sweater: #1a1a1a; --sweater-shadow: #000000; --sweater-light: #3a3a3a; --bowtie-color: #0a0a0a; --cape-color: #1a1a1a; --hair: #3a2a1c; }
+.character[data-skin="ironstyle"] { --sweater: #c84a3a; --sweater-shadow: #7a2010; --sweater-light: #ff6a4a; --bowtie-color: #c8a020; --cape-color: #7a2010; --hair: #3a2a1c; }
+.character[data-skin="batstyle"] { --sweater: #1a1a2a; --sweater-shadow: #000000; --sweater-light: #3a3a4a; --bowtie-color: #3a3a4a; --cape-color: #000000; --cape-shadow: #6a6a72; --hair: #0a0606; }
+.character[data-skin="manofsteel"] { --sweater: #1a3aaa; --sweater-shadow: #0a1a6a; --sweater-light: #3a5acc; --bowtie-color: #c84a3a; --cape-color: #c84a3a; --hair: #3a2a1c; }
+.character[data-skin="spiderstyle"] { --sweater: #c84a3a; --sweater-shadow: #7a2010; --sweater-light: #ff6a4a; --bowtie-color: #1a3aaa; --cape-color: #7a2010; --hair: #0a0606; }
+.character[data-skin="gokustyle"] { --sweater: #c8a020; --sweater-shadow: #8a6a08; --sweater-light: #ffd850; --bowtie-color: #1a3aaa; --cape-color: #c8a020; --hair: #c8a020; }
+
+/* pirate */
+@keyframes em_x_pirate_body { 0%{transform:rotate(0) translateY(0)} 20%{transform:translateX(-8px) rotate(-10deg)} 50%{transform:translateX(0) rotate(0)} 75%{transform:translateX(10px) rotate(12deg) translateY(-2px)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-pirate > svg { animation: em_x_pirate_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_pirate_armR { 0%{transform:rotate(0)} 20%{transform:rotate(80deg)} 50%{transform:rotate(-30deg)} 80%{transform:rotate(-130deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-pirate svg .h-arm-r { animation: em_x_pirate_armR 2.4s ease-in-out 1; }
+@keyframes em_x_pirate_forearmR { 0%{transform:rotate(0)} 20%{transform:rotate(-60deg)} 50%{transform:rotate(20deg)} 80%{transform:rotate(50deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-pirate svg .h-forearm-r { animation: em_x_pirate_forearmR 2.4s ease-in-out 1; }
+@keyframes em_x_pirate_armL { 0%{transform:rotate(0)} 50%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-pirate svg .h-arm-l { animation: em_x_pirate_armL 2.4s ease-in-out 1; }
+@keyframes em_x_pirate_legR { 0%{transform:rotate(0)} 35%{transform:rotate(-20deg)} 75%{transform:rotate(15deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-pirate svg .h-leg-r { animation: em_x_pirate_legR 2.4s ease-in-out 1; }
+
+
+
+/* soldier */
+@keyframes em_x_soldier_body { 0%{transform:rotate(0) translateY(0)} 25%{transform:translateY(-2px)} 50%{transform:translateY(0)} 75%{transform:translateY(-2px) rotate(2deg)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-soldier > svg { animation: em_x_soldier_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_soldier_armR { 0%{transform:rotate(0)} 20%{transform:rotate(-150deg)} 70%{transform:rotate(-150deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-soldier svg .h-arm-r { animation: em_x_soldier_armR 2.4s ease-in-out 1; }
+@keyframes em_x_soldier_forearmR { 0%{transform:rotate(0)} 20%{transform:rotate(-90deg)} 70%{transform:rotate(-90deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-soldier svg .h-forearm-r { animation: em_x_soldier_forearmR 2.4s ease-in-out 1; }
+@keyframes em_x_soldier_legR { 0%{transform:rotate(0)} 15%{transform:rotate(-12deg)} 85%{transform:rotate(-12deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-soldier svg .h-leg-r { animation: em_x_soldier_legR 2.4s ease-in-out 1; }
+
+/* skater */
+@keyframes em_x_skater_body { 0%{transform:rotate(0) translateY(0)} 20%{transform:translateY(2px)} 45%{transform:translateY(-22px) rotate(-180deg)} 70%{transform:translateY(-10px) rotate(-360deg)} 85%{transform:translateY(0) rotate(-360deg)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-skater > svg { animation: em_x_skater_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_skater_legL { 0%{transform:rotate(0)} 40%{transform:rotate(40deg)} 70%{transform:rotate(-15deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-skater svg .h-leg-l { animation: em_x_skater_legL 2.4s ease-in-out 1; }
+@keyframes em_x_skater_legR { 0%{transform:rotate(0)} 40%{transform:rotate(-40deg)} 70%{transform:rotate(15deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-skater svg .h-leg-r { animation: em_x_skater_legR 2.4s ease-in-out 1; }
+@keyframes em_x_skater_shinL { 0%{transform:rotate(0)} 40%{transform:rotate(80deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-skater svg .h-shin-l { animation: em_x_skater_shinL 2.4s ease-in-out 1; }
+@keyframes em_x_skater_shinR { 0%{transform:rotate(0)} 40%{transform:rotate(80deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-skater svg .h-shin-r { animation: em_x_skater_shinR 2.4s ease-in-out 1; }
+@keyframes em_x_skater_armR { 0%{transform:rotate(0)} 45%{transform:rotate(-100deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-skater svg .h-arm-r { animation: em_x_skater_armR 2.4s ease-in-out 1; }
+@keyframes em_x_skater_armL { 0%{transform:rotate(0)} 45%{transform:rotate(100deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-skater svg .h-arm-l { animation: em_x_skater_armL 2.4s ease-in-out 1; }
+
+/* cyclist */
+@keyframes em_x_cyclist_body { 0%{transform:rotate(-12deg)} 0%{transform:rotate(0) translateY(0)} 50%{transform:rotate(-12deg) translateY(2px)} 100%{transform:rotate(-12deg) translateY(0)} 100%{transform:rotate(-12deg)} }
+.character.emote-sig-cyclist > svg { animation: em_x_cyclist_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_cyclist_legR { 0%{transform:rotate(0)} 15%{transform:rotate(-70deg)} 40%{transform:rotate(0)} 65%{transform:rotate(70deg)} 90%{transform:rotate(0)} 100%{transform:rotate(0)} }
+.character.emote-sig-cyclist svg .h-leg-r { animation: em_x_cyclist_legR 2.4s ease-in-out 1; }
+@keyframes em_x_cyclist_shinR { 0%{transform:rotate(0)} 15%{transform:rotate(110deg)} 40%{transform:rotate(50deg)} 65%{transform:rotate(0)} 90%{transform:rotate(50deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-cyclist svg .h-shin-r { animation: em_x_cyclist_shinR 2.4s ease-in-out 1; }
+@keyframes em_x_cyclist_legL { 0%{transform:rotate(0)} 15%{transform:rotate(70deg)} 40%{transform:rotate(0)} 65%{transform:rotate(-70deg)} 90%{transform:rotate(0)} 100%{transform:rotate(0)} }
+.character.emote-sig-cyclist svg .h-leg-l { animation: em_x_cyclist_legL 2.4s ease-in-out 1; }
+@keyframes em_x_cyclist_shinL { 0%{transform:rotate(0)} 15%{transform:rotate(0)} 40%{transform:rotate(50deg)} 65%{transform:rotate(110deg)} 90%{transform:rotate(50deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-cyclist svg .h-shin-l { animation: em_x_cyclist_shinL 2.4s ease-in-out 1; }
+@keyframes em_x_cyclist_armR { 0%{transform:rotate(0)} 50%{transform:rotate(-70deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-cyclist svg .h-arm-r { animation: em_x_cyclist_armR 2.4s ease-in-out 1; }
+@keyframes em_x_cyclist_armL { 0%{transform:rotate(0)} 50%{transform:rotate(70deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-cyclist svg .h-arm-l { animation: em_x_cyclist_armL 2.4s ease-in-out 1; }
+
+
+
+
+/* ghost */
+@keyframes em_x_ghost_body { 0%{transform:rotate(0) translateY(0)} 20%{transform:translateX(-12px) translateY(-6px)} 45%{transform:translateX(0) translateY(-12px) scale(0.95)} 70%{transform:translateX(12px) translateY(-6px)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-ghost > svg { animation: em_x_ghost_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_ghost_armR { 0%{transform:rotate(0)} 20%{transform:rotate(-30deg)} 45%{transform:rotate(-100deg)} 70%{transform:rotate(-30deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-ghost svg .h-arm-r { animation: em_x_ghost_armR 2.4s ease-in-out 1; }
+@keyframes em_x_ghost_armL { 0%{transform:rotate(0)} 20%{transform:rotate(30deg)} 45%{transform:rotate(100deg)} 70%{transform:rotate(30deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-ghost svg .h-arm-l { animation: em_x_ghost_armL 2.4s ease-in-out 1; }
+@keyframes em_x_ghost_legR { 0%{transform:rotate(0)} 50%{transform:rotate(20deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-ghost svg .h-leg-r { animation: em_x_ghost_legR 2.4s ease-in-out 1; }
+@keyframes em_x_ghost_legL { 0%{transform:rotate(0)} 50%{transform:rotate(-20deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-ghost svg .h-leg-l { animation: em_x_ghost_legL 2.4s ease-in-out 1; }
+
+/* robot */
+@keyframes em_x_robot_body { 0%{transform:rotate(0) translateY(0)} 10%{transform:translateX(2px)} 15%{transform:translateX(-2px)} 50%{transform:rotate(-90deg)} 55%{transform:rotate(-90deg)} 90%{transform:rotate(0)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-robot > svg { animation: em_x_robot_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_robot_armR { 0%{transform:rotate(0)} 10%{transform:rotate(-30deg)} 15%{transform:rotate(-30deg)} 50%{transform:rotate(-95deg)} 55%{transform:rotate(-95deg)} 90%{transform:rotate(0)} 100%{transform:rotate(0)} }
+.character.emote-sig-robot svg .h-arm-r { animation: em_x_robot_armR 2.4s ease-in-out 1; }
+@keyframes em_x_robot_armL { 0%{transform:rotate(0)} 10%{transform:rotate(30deg)} 15%{transform:rotate(30deg)} 50%{transform:rotate(95deg)} 55%{transform:rotate(95deg)} 90%{transform:rotate(0)} 100%{transform:rotate(0)} }
+.character.emote-sig-robot svg .h-arm-l { animation: em_x_robot_armL 2.4s ease-in-out 1; }
+@keyframes em_x_robot_forearmR { 0%{transform:rotate(0)} 50%{transform:rotate(-90deg)} 55%{transform:rotate(-90deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-robot svg .h-forearm-r { animation: em_x_robot_forearmR 2.4s ease-in-out 1; }
+@keyframes em_x_robot_forearmL { 0%{transform:rotate(0)} 50%{transform:rotate(90deg)} 55%{transform:rotate(90deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-robot svg .h-forearm-l { animation: em_x_robot_forearmL 2.4s ease-in-out 1; }
+
+/* timetraveler */
+@keyframes em_x_timetraveler_body { 0%{transform:rotate(0)} 0%{transform:rotate(0)} 50%{transform:rotate(180deg) scale(0.9)} 100%{transform:rotate(360deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-timetraveler > svg { animation: em_x_timetraveler_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_timetraveler_armR { 0%{transform:rotate(0)} 25%{transform:rotate(-100deg)} 75%{transform:rotate(-100deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-timetraveler svg .h-arm-r { animation: em_x_timetraveler_armR 2.4s ease-in-out 1; }
+@keyframes em_x_timetraveler_armL { 0%{transform:rotate(0)} 25%{transform:rotate(100deg)} 75%{transform:rotate(100deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-timetraveler svg .h-arm-l { animation: em_x_timetraveler_armL 2.4s ease-in-out 1; }
+
+/* disco */
+@keyframes em_x_disco_body { 0%{transform:rotate(0) translateY(0)} 15%{transform:rotate(-6deg)} 35%{transform:rotate(6deg)} 55%{transform:rotate(-6deg)} 75%{transform:rotate(6deg)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-disco > svg { animation: em_x_disco_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_disco_armR { 0%{transform:rotate(0)} 15%{transform:rotate(-170deg)} 35%{transform:rotate(-30deg)} 55%{transform:rotate(-170deg)} 75%{transform:rotate(-30deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-disco svg .h-arm-r { animation: em_x_disco_armR 2.4s ease-in-out 1; }
+@keyframes em_x_disco_armL { 0%{transform:rotate(0)} 15%{transform:rotate(30deg)} 35%{transform:rotate(170deg)} 55%{transform:rotate(30deg)} 75%{transform:rotate(170deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-disco svg .h-arm-l { animation: em_x_disco_armL 2.4s ease-in-out 1; }
+@keyframes em_x_disco_legR { 0%{transform:rotate(0)} 35%{transform:rotate(-10deg)} 75%{transform:rotate(-10deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-disco svg .h-leg-r { animation: em_x_disco_legR 2.4s ease-in-out 1; }
+@keyframes em_x_disco_legL { 0%{transform:rotate(0)} 15%{transform:rotate(10deg)} 55%{transform:rotate(10deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-disco svg .h-leg-l { animation: em_x_disco_legL 2.4s ease-in-out 1; }
+
+/* punk */
+@keyframes em_x_punk_body { 0%{transform:rotate(0)} 0%{transform:rotate(0)} 15%{transform:rotate(-25deg)} 30%{transform:rotate(15deg)} 45%{transform:rotate(-25deg)} 60%{transform:rotate(15deg)} 80%{transform:rotate(-25deg)} 100%{transform:rotate(0)} 100%{transform:rotate(0)} }
+.character.emote-sig-punk > svg { animation: em_x_punk_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_punk_armR { 0%{transform:rotate(0)} 20%{transform:rotate(-90deg)} 50%{transform:rotate(-50deg)} 80%{transform:rotate(-90deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-punk svg .h-arm-r { animation: em_x_punk_armR 2.4s ease-in-out 1; }
+@keyframes em_x_punk_armL { 0%{transform:rotate(0)} 20%{transform:rotate(90deg)} 50%{transform:rotate(50deg)} 80%{transform:rotate(90deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-punk svg .h-arm-l { animation: em_x_punk_armL 2.4s ease-in-out 1; }
+@keyframes em_x_punk_forearmR { 0%{transform:rotate(0)} 50%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-punk svg .h-forearm-r { animation: em_x_punk_forearmR 2.4s ease-in-out 1; }
+@keyframes em_x_punk_forearmL { 0%{transform:rotate(0)} 50%{transform:rotate(-40deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-punk svg .h-forearm-l { animation: em_x_punk_forearmL 2.4s ease-in-out 1; }
+
+/* jobsstyle */
+@keyframes em_x_jobsstyle_body { 0%{transform:rotate(0) translateY(0)} 25%{transform:translateY(-2px) rotate(-2deg)} 60%{transform:translateY(-4px) rotate(0)} 85%{transform:translateY(0) rotate(2deg)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-jobsstyle > svg { animation: em_x_jobsstyle_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_jobsstyle_armR { 0%{transform:rotate(0)} 30%{transform:rotate(-100deg)} 70%{transform:rotate(-100deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-jobsstyle svg .h-arm-r { animation: em_x_jobsstyle_armR 2.4s ease-in-out 1; }
+@keyframes em_x_jobsstyle_forearmR { 0%{transform:rotate(0)} 30%{transform:rotate(-60deg)} 70%{transform:rotate(-60deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-jobsstyle svg .h-forearm-r { animation: em_x_jobsstyle_forearmR 2.4s ease-in-out 1; }
+@keyframes em_x_jobsstyle_armL { 0%{transform:rotate(0)} 50%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-jobsstyle svg .h-arm-l { animation: em_x_jobsstyle_armL 2.4s ease-in-out 1; }
+
+/* ironstyle */
+@keyframes em_x_ironstyle_body { 0%{transform:rotate(0) translateY(0)} 15%{transform:translateY(2px)} 40%{transform:translateY(-12px) rotate(-2deg)} 70%{transform:translateY(-18px)} 90%{transform:translateY(-8px) rotate(2deg)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-ironstyle > svg { animation: em_x_ironstyle_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_ironstyle_armR { 0%{transform:rotate(0)} 40%{transform:rotate(-100deg)} 70%{transform:rotate(-100deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-ironstyle svg .h-arm-r { animation: em_x_ironstyle_armR 2.4s ease-in-out 1; }
+@keyframes em_x_ironstyle_forearmR { 0%{transform:rotate(0)} 40%{transform:rotate(40deg)} 70%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-ironstyle svg .h-forearm-r { animation: em_x_ironstyle_forearmR 2.4s ease-in-out 1; }
+@keyframes em_x_ironstyle_armL { 0%{transform:rotate(0)} 70%{transform:rotate(90deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-ironstyle svg .h-arm-l { animation: em_x_ironstyle_armL 2.4s ease-in-out 1; }
+@keyframes em_x_ironstyle_legR { 0%{transform:rotate(0)} 70%{transform:rotate(-12deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-ironstyle svg .h-leg-r { animation: em_x_ironstyle_legR 2.4s ease-in-out 1; }
+@keyframes em_x_ironstyle_legL { 0%{transform:rotate(0)} 70%{transform:rotate(12deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-ironstyle svg .h-leg-l { animation: em_x_ironstyle_legL 2.4s ease-in-out 1; }
+
+
+/* manofsteel */
+@keyframes em_x_manofsteel_body { 0%{transform:rotate(0) translateY(0)} 20%{transform:translateY(-8px) rotate(-15deg)} 50%{transform:translateY(-18px) rotate(-25deg)} 80%{transform:translateY(-10px) rotate(-20deg)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-manofsteel > svg { animation: em_x_manofsteel_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_manofsteel_armR { 0%{transform:rotate(0)} 50%{transform:rotate(-160deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-manofsteel svg .h-arm-r { animation: em_x_manofsteel_armR 2.4s ease-in-out 1; }
+@keyframes em_x_manofsteel_armL { 0%{transform:rotate(0)} 50%{transform:rotate(20deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-manofsteel svg .h-arm-l { animation: em_x_manofsteel_armL 2.4s ease-in-out 1; }
+@keyframes em_x_manofsteel_legR { 0%{transform:rotate(0)} 50%{transform:rotate(8deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-manofsteel svg .h-leg-r { animation: em_x_manofsteel_legR 2.4s ease-in-out 1; }
+@keyframes em_x_manofsteel_legL { 0%{transform:rotate(0)} 50%{transform:rotate(8deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-manofsteel svg .h-leg-l { animation: em_x_manofsteel_legL 2.4s ease-in-out 1; }
+
+
+
+
+/* gokustyle */
+@keyframes em_x_gokustyle_body { 0%{transform:rotate(0) translateY(0)} 20%{transform:translateY(3px) rotate(0)} 40%{transform:translateY(-2px) scale(1.06)} 60%{transform:translateY(2px) scale(0.98)} 80%{transform:translateY(-4px) scale(1.08)} 100%{transform:rotate(0) translateY(0)} }
+.character.emote-sig-gokustyle > svg { animation: em_x_gokustyle_body 2.4s ease-in-out 1 !important; }
+@keyframes em_x_gokustyle_armR { 0%{transform:rotate(0)} 20%{transform:rotate(-30deg)} 40%{transform:rotate(-50deg)} 60%{transform:rotate(-30deg)} 80%{transform:rotate(-60deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-gokustyle svg .h-arm-r { animation: em_x_gokustyle_armR 2.4s ease-in-out 1; }
+@keyframes em_x_gokustyle_forearmR { 0%{transform:rotate(0)} 40%{transform:rotate(-50deg)} 80%{transform:rotate(-50deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-gokustyle svg .h-forearm-r { animation: em_x_gokustyle_forearmR 2.4s ease-in-out 1; }
+@keyframes em_x_gokustyle_armL { 0%{transform:rotate(0)} 20%{transform:rotate(30deg)} 40%{transform:rotate(50deg)} 60%{transform:rotate(30deg)} 80%{transform:rotate(60deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-gokustyle svg .h-arm-l { animation: em_x_gokustyle_armL 2.4s ease-in-out 1; }
+@keyframes em_x_gokustyle_forearmL { 0%{transform:rotate(0)} 40%{transform:rotate(50deg)} 80%{transform:rotate(50deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-gokustyle svg .h-forearm-l { animation: em_x_gokustyle_forearmL 2.4s ease-in-out 1; }
+
+
+/* ====================================================================== */
+/* ====== REWRITTEN UNIQUE EMOTES (per user spec) ====== */
+/* ====================================================================== */
+
+/* ---------- CHEF — armwave (worm wave across both arms) ---------- */
+@keyframes em_x_chef_body { 0%{transform:translateY(0)} 25%{transform:translateY(-3px)} 50%{transform:translateY(0)} 75%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
+@keyframes em_x_chef_armL { 0%{transform:rotate(0)} 10%{transform:rotate(70deg)} 25%{transform:rotate(40deg)} 40%{transform:rotate(70deg)} 55%{transform:rotate(40deg)} 70%{transform:rotate(70deg)} 85%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_chef_forearmL { 0%{transform:rotate(0)} 10%{transform:rotate(-90deg)} 25%{transform:rotate(-40deg)} 40%{transform:rotate(-90deg)} 55%{transform:rotate(-40deg)} 70%{transform:rotate(-90deg)} 85%{transform:rotate(-40deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_chef_armR { 0%{transform:rotate(0)} 20%{transform:rotate(-40deg)} 35%{transform:rotate(-70deg)} 50%{transform:rotate(-40deg)} 65%{transform:rotate(-70deg)} 80%{transform:rotate(-40deg)} 95%{transform:rotate(-70deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_chef_forearmR { 0%{transform:rotate(0)} 20%{transform:rotate(40deg)} 35%{transform:rotate(90deg)} 50%{transform:rotate(40deg)} 65%{transform:rotate(90deg)} 80%{transform:rotate(40deg)} 95%{transform:rotate(90deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-chef > svg            { animation: em_x_chef_body 2.4s ease-in-out 1 !important; }
+.character.emote-sig-chef svg .h-arm-l     { animation: em_x_chef_armL 2.4s ease-in-out 1; }
+.character.emote-sig-chef svg .h-forearm-l { animation: em_x_chef_forearmL 2.4s ease-in-out 1; }
+.character.emote-sig-chef svg .h-arm-r     { animation: em_x_chef_armR 2.4s ease-in-out 1; }
+.character.emote-sig-chef svg .h-forearm-r { animation: em_x_chef_forearmR 2.4s ease-in-out 1; }
+
+/* ---------- POLICE — show of muscles: alternating bicep flex, both arms ---------- */
+@keyframes em_x_police_body { 0%{transform:rotate(0) translateY(0)} 30%{transform:rotate(-3deg) translateY(-2px)} 60%{transform:rotate(3deg) translateY(-2px)} 85%{transform:rotate(0)} 100%{transform:rotate(0)} }
+/* Right arm: shoulder lifts to side then flexes bicep (forearm folds up) at 25%-45%, settles 80%. */
+@keyframes em_x_police_armR { 0%{transform:rotate(0)} 25%{transform:rotate(-90deg)} 45%{transform:rotate(-90deg)} 60%{transform:rotate(-90deg)} 80%{transform:rotate(0)} 100%{transform:rotate(0)} }
+@keyframes em_x_police_forearmR { 0%{transform:rotate(0)} 25%{transform:rotate(-30deg)} 35%{transform:rotate(-120deg)} 45%{transform:rotate(-120deg)} 60%{transform:rotate(-30deg)} 80%{transform:rotate(0)} 100%{transform:rotate(0)} }
+/* Left arm: lifts to side then flexes bicep at 55%-75%, settles 90%. */
+@keyframes em_x_police_armL { 0%{transform:rotate(0)} 25%{transform:rotate(0)} 55%{transform:rotate(90deg)} 75%{transform:rotate(90deg)} 90%{transform:rotate(0)} 100%{transform:rotate(0)} }
+@keyframes em_x_police_forearmL { 0%{transform:rotate(0)} 55%{transform:rotate(30deg)} 65%{transform:rotate(120deg)} 75%{transform:rotate(120deg)} 90%{transform:rotate(0)} 100%{transform:rotate(0)} }
+.character.emote-sig-police > svg            { animation: em_x_police_body 2.6s ease-in-out 1 !important; }
+.character.emote-sig-police svg .h-arm-r     { animation: em_x_police_armR 2.6s ease-in-out 1; }
+.character.emote-sig-police svg .h-forearm-r { animation: em_x_police_forearmR 2.6s ease-in-out 1; }
+.character.emote-sig-police svg .h-arm-l     { animation: em_x_police_armL 2.6s ease-in-out 1; }
+.character.emote-sig-police svg .h-forearm-l { animation: em_x_police_forearmL 2.6s ease-in-out 1; }
+
+/* ---------- MUSICIAN — natural hip sway with rhythmic arm raises ---------- */
+@keyframes em_x_musician_body { 0%{transform:translateX(0) rotate(0)} 18%{transform:translateX(-6px) rotate(-6deg)} 36%{transform:translateX(0) rotate(0)} 54%{transform:translateX(6px) rotate(6deg)} 72%{transform:translateX(0) rotate(0)} 90%{transform:translateX(-6px) rotate(-6deg)} 100%{transform:translateX(0) rotate(0)} }
+@keyframes em_x_musician_armR { 0%{transform:rotate(0)} 18%{transform:rotate(-150deg)} 36%{transform:rotate(-30deg)} 54%{transform:rotate(-150deg)} 72%{transform:rotate(-30deg)} 90%{transform:rotate(-150deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_musician_armL { 0%{transform:rotate(0)} 18%{transform:rotate(30deg)} 36%{transform:rotate(150deg)} 54%{transform:rotate(30deg)} 72%{transform:rotate(150deg)} 90%{transform:rotate(30deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_musician_legR { 0%{transform:rotate(0)} 18%{transform:rotate(-10deg)} 54%{transform:rotate(10deg)} 90%{transform:rotate(-10deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_musician_legL { 0%{transform:rotate(0)} 18%{transform:rotate(10deg)} 54%{transform:rotate(-10deg)} 90%{transform:rotate(10deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-musician > svg          { animation: em_x_musician_body 3.0s ease-in-out 1 !important; }
+.character.emote-sig-musician svg .h-arm-r   { animation: em_x_musician_armR 3.0s ease-in-out 1; }
+.character.emote-sig-musician svg .h-arm-l   { animation: em_x_musician_armL 3.0s ease-in-out 1; }
+.character.emote-sig-musician svg .h-leg-r   { animation: em_x_musician_legR 3.0s ease-in-out 1; }
+.character.emote-sig-musician svg .h-leg-l   { animation: em_x_musician_legL 3.0s ease-in-out 1; }
+
+/* ---------- VAMPIRE — jump then SPREAD legs (stretching pose) ---------- */
+@keyframes em_x_vampire_body { 0%{transform:translateY(0)} 25%{transform:translateY(4px)} 45%{transform:translateY(-18px) rotate(0deg)} 65%{transform:translateY(-22px) rotate(0deg)} 85%{transform:translateY(-4px)} 100%{transform:translateY(0)} }
+@keyframes em_x_vampire_legR { 0%{transform:rotate(0)} 25%{transform:rotate(10deg)} 50%{transform:rotate(-15deg)} 65%{transform:rotate(-65deg)} 80%{transform:rotate(-65deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_vampire_legL { 0%{transform:rotate(0)} 25%{transform:rotate(-10deg)} 50%{transform:rotate(15deg)} 65%{transform:rotate(65deg)} 80%{transform:rotate(65deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_vampire_shinR { 0%{transform:rotate(0)} 25%{transform:rotate(30deg)} 50%{transform:rotate(60deg)} 65%{transform:rotate(40deg)} 80%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_vampire_shinL { 0%{transform:rotate(0)} 25%{transform:rotate(30deg)} 50%{transform:rotate(60deg)} 65%{transform:rotate(40deg)} 80%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+/* Upper body unchanged: keep the cape flourish from before. */
+@keyframes em_x_vampire_armR { 0%{transform:rotate(0)} 30%{transform:rotate(20deg)} 60%{transform:rotate(150deg)} 85%{transform:rotate(20deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_vampire_forearmR { 0%{transform:rotate(0)} 60%{transform:rotate(-100deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_vampire_armL { 0%{transform:rotate(0)} 30%{transform:rotate(-20deg)} 60%{transform:rotate(-150deg)} 85%{transform:rotate(-20deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_vampire_forearmL { 0%{transform:rotate(0)} 60%{transform:rotate(100deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-vampire > svg            { animation: em_x_vampire_body 2.6s ease-in-out 1 !important; }
+.character.emote-sig-vampire svg .h-arm-r     { animation: em_x_vampire_armR 2.6s ease-in-out 1; }
+.character.emote-sig-vampire svg .h-forearm-r { animation: em_x_vampire_forearmR 2.6s ease-in-out 1; }
+.character.emote-sig-vampire svg .h-arm-l     { animation: em_x_vampire_armL 2.6s ease-in-out 1; }
+.character.emote-sig-vampire svg .h-forearm-l { animation: em_x_vampire_forearmL 2.6s ease-in-out 1; }
+.character.emote-sig-vampire svg .h-leg-r     { animation: em_x_vampire_legR 2.6s ease-in-out 1; }
+.character.emote-sig-vampire svg .h-leg-l     { animation: em_x_vampire_legL 2.6s ease-in-out 1; }
+.character.emote-sig-vampire svg .h-shin-r    { animation: em_x_vampire_shinR 2.6s ease-in-out 1; }
+.character.emote-sig-vampire svg .h-shin-l    { animation: em_x_vampire_shinL 2.6s ease-in-out 1; }
+
+/* ---------- HACKER — vibrate + cross/uncross legs + pretend-type ---------- */
+@keyframes em_x_hacker_body {
+  0%{transform:translateX(0)} 5%{transform:translateX(-1px)} 10%{transform:translateX(1px)}
+  15%{transform:translateX(-1px)} 20%{transform:translateX(1px)} 25%{transform:translateX(-1px)}
+  30%{transform:translateX(1px)} 35%{transform:translateX(-1px)} 40%{transform:translateX(1px)}
+  45%{transform:translateX(-1px)} 50%{transform:translateX(1px)} 55%{transform:translateX(-1px)}
+  60%{transform:translateX(1px)} 65%{transform:translateX(-1px)} 70%{transform:translateX(1px)}
+  75%{transform:translateX(-1px)} 80%{transform:translateX(1px)} 85%{transform:translateX(-1px)}
+  90%{transform:translateX(1px)} 95%{transform:translateX(-1px)} 100%{transform:translateX(0)}
+}
+@keyframes em_x_hacker_legR { 0%{transform:rotate(0)} 25%{transform:rotate(-20deg)} 50%{transform:rotate(0)} 75%{transform:rotate(-20deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_hacker_shinR { 0%{transform:rotate(0)} 25%{transform:rotate(40deg)} 50%{transform:rotate(0)} 75%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_hacker_legL { 0%{transform:rotate(0)} 25%{transform:rotate(20deg)} 50%{transform:rotate(0)} 75%{transform:rotate(20deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_hacker_shinL { 0%{transform:rotate(0)} 25%{transform:rotate(40deg)} 50%{transform:rotate(0)} 75%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_hacker_armR { 0%{transform:rotate(0)} 15%{transform:rotate(-50deg)} 100%{transform:rotate(-50deg)} }
+@keyframes em_x_hacker_forearmR {
+  0%{transform:rotate(0)} 15%{transform:rotate(20deg)}
+  25%{transform:rotate(50deg)} 30%{transform:rotate(20deg)}
+  35%{transform:rotate(50deg)} 40%{transform:rotate(20deg)}
+  45%{transform:rotate(50deg)} 50%{transform:rotate(20deg)}
+  55%{transform:rotate(50deg)} 60%{transform:rotate(20deg)}
+  65%{transform:rotate(50deg)} 70%{transform:rotate(20deg)}
+  75%{transform:rotate(50deg)} 80%{transform:rotate(20deg)}
+  85%{transform:rotate(50deg)} 100%{transform:rotate(0)}
+}
+@keyframes em_x_hacker_armL { 0%{transform:rotate(0)} 15%{transform:rotate(50deg)} 100%{transform:rotate(50deg)} }
+@keyframes em_x_hacker_forearmL {
+  0%{transform:rotate(0)} 15%{transform:rotate(-20deg)}
+  25%{transform:rotate(-50deg)} 30%{transform:rotate(-20deg)}
+  35%{transform:rotate(-50deg)} 40%{transform:rotate(-20deg)}
+  45%{transform:rotate(-50deg)} 50%{transform:rotate(-20deg)}
+  55%{transform:rotate(-50deg)} 60%{transform:rotate(-20deg)}
+  65%{transform:rotate(-50deg)} 70%{transform:rotate(-20deg)}
+  75%{transform:rotate(-50deg)} 80%{transform:rotate(-20deg)}
+  85%{transform:rotate(-50deg)} 100%{transform:rotate(0)}
+}
+.character.emote-sig-hacker > svg            { animation: em_x_hacker_body 2.4s ease-in-out 1 !important; }
+.character.emote-sig-hacker svg .h-leg-r     { animation: em_x_hacker_legR 2.4s ease-in-out 1; }
+.character.emote-sig-hacker svg .h-shin-r    { animation: em_x_hacker_shinR 2.4s ease-in-out 1; }
+.character.emote-sig-hacker svg .h-leg-l     { animation: em_x_hacker_legL 2.4s ease-in-out 1; }
+.character.emote-sig-hacker svg .h-shin-l    { animation: em_x_hacker_shinL 2.4s ease-in-out 1; }
+.character.emote-sig-hacker svg .h-arm-r     { animation: em_x_hacker_armR 2.4s ease-in-out 1; }
+.character.emote-sig-hacker svg .h-forearm-r { animation: em_x_hacker_forearmR 2.4s ease-in-out 1; }
+.character.emote-sig-hacker svg .h-arm-l     { animation: em_x_hacker_armL 2.4s ease-in-out 1; }
+.character.emote-sig-hacker svg .h-forearm-l { animation: em_x_hacker_forearmL 2.4s ease-in-out 1; }
+
+/* ---------- WEB SLINGER — cartwheel + arm flip ---------- */
+@keyframes em_x_spiderstyle_body {
+  0%{transform:translateY(0) rotate(0)}
+  20%{transform:translateY(-8px) rotate(-90deg) translateX(-8px)}
+  40%{transform:translateY(-26px) rotate(-180deg) translateX(0)}
+  60%{transform:translateY(-12px) rotate(-270deg) translateX(8px)}
+  80%{transform:translateY(0) rotate(-360deg)}
+  100%{transform:translateY(0) rotate(-360deg)}
+}
+/* Arms spread out during the cartwheel for balance. */
+@keyframes em_x_spiderstyle_armR { 0%{transform:rotate(0)} 30%{transform:rotate(-100deg)} 60%{transform:rotate(-150deg)} 90%{transform:rotate(-30deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_spiderstyle_armL { 0%{transform:rotate(0)} 30%{transform:rotate(100deg)} 60%{transform:rotate(150deg)} 90%{transform:rotate(30deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_spiderstyle_forearmR { 0%{transform:rotate(0)} 50%{transform:rotate(40deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_spiderstyle_forearmL { 0%{transform:rotate(0)} 50%{transform:rotate(-40deg)} 100%{transform:rotate(0)} }
+/* Legs splay during the spin then land. */
+@keyframes em_x_spiderstyle_legR { 0%{transform:rotate(0)} 30%{transform:rotate(-40deg)} 60%{transform:rotate(40deg)} 90%{transform:rotate(0)} 100%{transform:rotate(0)} }
+@keyframes em_x_spiderstyle_legL { 0%{transform:rotate(0)} 30%{transform:rotate(40deg)} 60%{transform:rotate(-40deg)} 90%{transform:rotate(0)} 100%{transform:rotate(0)} }
+@keyframes em_x_spiderstyle_shinR { 0%{transform:rotate(0)} 30%{transform:rotate(70deg)} 60%{transform:rotate(20deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_spiderstyle_shinL { 0%{transform:rotate(0)} 30%{transform:rotate(20deg)} 60%{transform:rotate(70deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-spiderstyle > svg            { animation: em_x_spiderstyle_body 2.8s ease-in-out 1 !important; }
+.character.emote-sig-spiderstyle svg .h-arm-r     { animation: em_x_spiderstyle_armR 2.8s ease-in-out 1; }
+.character.emote-sig-spiderstyle svg .h-forearm-r { animation: em_x_spiderstyle_forearmR 2.8s ease-in-out 1; }
+.character.emote-sig-spiderstyle svg .h-arm-l     { animation: em_x_spiderstyle_armL 2.8s ease-in-out 1; }
+.character.emote-sig-spiderstyle svg .h-forearm-l { animation: em_x_spiderstyle_forearmL 2.8s ease-in-out 1; }
+.character.emote-sig-spiderstyle svg .h-leg-r     { animation: em_x_spiderstyle_legR 2.8s ease-in-out 1; }
+.character.emote-sig-spiderstyle svg .h-shin-r    { animation: em_x_spiderstyle_shinR 2.8s ease-in-out 1; }
+.character.emote-sig-spiderstyle svg .h-leg-l     { animation: em_x_spiderstyle_legL 2.8s ease-in-out 1; }
+.character.emote-sig-spiderstyle svg .h-shin-l    { animation: em_x_spiderstyle_shinL 2.8s ease-in-out 1; }
+
+/* ---------- NIGHT VIGILANTE — flex one bicep, then HIGH drop-kick from ground ---------- */
+@keyframes em_x_batstyle_body {
+  0%{transform:translateY(0) rotate(0)}
+  10%{transform:rotate(-3deg)}
+  25%{transform:rotate(-3deg)}
+  45%{transform:translateY(2px)}
+  55%{transform:translateY(-32px) rotate(-15deg)}
+  75%{transform:translateY(-36px) rotate(-12deg)}
+  90%{transform:translateY(-8px) rotate(0)}
+  100%{transform:translateY(0) rotate(0)}
+}
+/* Right arm: lift then bicep flex through 10%-30%, then settle/spread for kick balance. */
+@keyframes em_x_batstyle_armR { 0%{transform:rotate(0)} 10%{transform:rotate(-90deg)} 30%{transform:rotate(-90deg)} 55%{transform:rotate(-120deg)} 75%{transform:rotate(-100deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_batstyle_forearmR { 0%{transform:rotate(0)} 10%{transform:rotate(-30deg)} 20%{transform:rotate(-130deg)} 30%{transform:rotate(-130deg)} 55%{transform:rotate(-40deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_batstyle_armL { 0%{transform:rotate(0)} 30%{transform:rotate(40deg)} 55%{transform:rotate(80deg)} 75%{transform:rotate(60deg)} 100%{transform:rotate(0)} }
+/* Right leg launches forward + up into the high drop kick at 55%-75%. */
+@keyframes em_x_batstyle_legR { 0%{transform:rotate(0)} 45%{transform:rotate(-30deg)} 55%{transform:rotate(-110deg)} 75%{transform:rotate(-130deg)} 90%{transform:rotate(-40deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_batstyle_shinR { 0%{transform:rotate(0)} 45%{transform:rotate(40deg)} 55%{transform:rotate(0deg)} 75%{transform:rotate(0deg)} 90%{transform:rotate(20deg)} 100%{transform:rotate(0)} }
+/* Calmer left leg during the jump — small tuck instead of a wide sway. */
+@keyframes em_x_batstyle_legL { 0%{transform:rotate(0)} 55%{transform:rotate(8deg)} 75%{transform:rotate(10deg)} 90%{transform:rotate(4deg)} 100%{transform:rotate(0)} }
+@keyframes em_x_batstyle_shinL { 0%{transform:rotate(0)} 55%{transform:rotate(20deg)} 75%{transform:rotate(25deg)} 90%{transform:rotate(8deg)} 100%{transform:rotate(0)} }
+.character.emote-sig-batstyle > svg            { animation: em_x_batstyle_body 2.8s ease-in-out 1 !important; }
+.character.emote-sig-batstyle svg .h-arm-r     { animation: em_x_batstyle_armR 2.8s ease-in-out 1; }
+.character.emote-sig-batstyle svg .h-forearm-r { animation: em_x_batstyle_forearmR 2.8s ease-in-out 1; }
+.character.emote-sig-batstyle svg .h-arm-l     { animation: em_x_batstyle_armL 2.8s ease-in-out 1; }
+.character.emote-sig-batstyle svg .h-leg-r     { animation: em_x_batstyle_legR 2.8s ease-in-out 1; }
+.character.emote-sig-batstyle svg .h-shin-r    { animation: em_x_batstyle_shinR 2.8s ease-in-out 1; }
+.character.emote-sig-batstyle svg .h-leg-l     { animation: em_x_batstyle_legL 2.8s ease-in-out 1; }
+.character.emote-sig-batstyle svg .h-shin-l    { animation: em_x_batstyle_shinL 2.8s ease-in-out 1; }
+
+/* ====================================================================== */
+/* ====== STAR CAPTAIN (capstyle): cross arms + jump, legs joined ====== */
+/* Phase 1 (0-30%): bring arms to chest crossed.
+   Phase 2 (30-75%): jump straight up while keeping arms crossed and legs together.
+   Phase 3 (75-100%): land and uncross. */
+/* ====================================================================== */
+@keyframes em_x_capstyle_body {
+  0%   { transform: translateY(0); }
+  20%  { transform: translateY(4px); }       /* crouch */
+  35%  { transform: translateY(2px); }
+  60%  { transform: translateY(-26px); }      /* peak of jump */
+  75%  { transform: translateY(-22px); }      /* hold near peak */
+  90%  { transform: translateY(2px); }        /* land */
+  100% { transform: translateY(0); }
+}
+/* Arms fold INWARD into the X pose on the chest.
+   In CSS, rotate(+deg) is CLOCKWISE visually (y-axis points down). So a
+   forearm pointing straight down at identity rotated by +90deg swings to
+   the LEFT (across the body's centre) — that's the inward fold direction
+   for the right arm. We use the OPPOSITE sign for the left arm. */
+@keyframes em_x_capstyle_armR {
+  0%   { transform: rotate(0); }
+  20%  { transform: rotate(18deg); }          /* shoulder swings inward toward chest */
+  35%  { transform: rotate(30deg); }          /* elbow tucked, ready for X-cross */
+  85%  { transform: rotate(30deg); }          /* hold during jump */
+  100% { transform: rotate(0); }
+}
+@keyframes em_x_capstyle_forearmR {
+  0%   { transform: rotate(0); }
+  20%  { transform: rotate(80deg); }           /* decisive swing across chest */
+  35%  { transform: rotate(140deg); }          /* fully folded into the X pose */
+  85%  { transform: rotate(140deg); }          /* hold */
+  100% { transform: rotate(0); }
+}
+@keyframes em_x_capstyle_armL {
+  0%   { transform: rotate(0); }
+  20%  { transform: rotate(-18deg); }
+  35%  { transform: rotate(-30deg); }
+  85%  { transform: rotate(-30deg); }
+  100% { transform: rotate(0); }
+}
+@keyframes em_x_capstyle_forearmL {
+  0%   { transform: rotate(0); }
+  20%  { transform: rotate(-80deg); }
+  35%  { transform: rotate(-140deg); }
+  85%  { transform: rotate(-140deg); }
+  100% { transform: rotate(0); }
+}
+/* Legs stay joined together. Both hips rotate ~3deg inward so feet touch.
+   Knees bend slightly during the leap, then straighten. */
+@keyframes em_x_capstyle_legR {
+  0%   { transform: rotate(0); }
+  20%  { transform: rotate(-2deg); }
+  60%  { transform: rotate(-3deg); }
+  100% { transform: rotate(0); }
+}
+@keyframes em_x_capstyle_legL {
+  0%   { transform: rotate(0); }
+  20%  { transform: rotate(2deg); }
+  60%  { transform: rotate(3deg); }
+  100% { transform: rotate(0); }
+}
+@keyframes em_x_capstyle_shinR {
+  0%   { transform: rotate(0); }
+  35%  { transform: rotate(20deg); }          /* pre-jump knee bend */
+  60%  { transform: rotate(10deg); }
+  100% { transform: rotate(0); }
+}
+@keyframes em_x_capstyle_shinL {
+  0%   { transform: rotate(0); }
+  35%  { transform: rotate(20deg); }
+  60%  { transform: rotate(10deg); }
+  100% { transform: rotate(0); }
+}
+.character.emote-sig-capstyle > svg            { animation: em_x_capstyle_body 2.6s ease-in-out 1 !important; }
+.character.emote-sig-capstyle svg .h-arm-r     { animation: em_x_capstyle_armR 2.6s ease-in-out 1; }
+.character.emote-sig-capstyle svg .h-forearm-r { animation: em_x_capstyle_forearmR 2.6s ease-in-out 1; }
+.character.emote-sig-capstyle svg .h-arm-l     { animation: em_x_capstyle_armL 2.6s ease-in-out 1; }
+.character.emote-sig-capstyle svg .h-forearm-l { animation: em_x_capstyle_forearmL 2.6s ease-in-out 1; }
+.character.emote-sig-capstyle svg .h-leg-r     { animation: em_x_capstyle_legR 2.6s ease-in-out 1; }
+.character.emote-sig-capstyle svg .h-leg-l     { animation: em_x_capstyle_legL 2.6s ease-in-out 1; }
+.character.emote-sig-capstyle svg .h-shin-r    { animation: em_x_capstyle_shinR 2.6s ease-in-out 1; }
+.character.emote-sig-capstyle svg .h-shin-l    { animation: em_x_capstyle_shinL 2.6s ease-in-out 1; }
+
+/* Star Captain colour palette — bright red/white super-captain look. */
+.character[data-skin="capstyle"] {
+  --sweater: #1a3aaa; --sweater-shadow: #0a1a6a; --sweater-light: #3a5acc;
+  --bowtie-color: #c84a3a; --cape-color: #c84a3a; --hair: #3a2a1c;
+}
+
+/* ====================================================================== */
+/* ====== SUPER SURGE (gokustyle): continuous neon colour cycling ====== */
+/* hue-rotate is applied to the .character container so the SVG transforms
+   used by emotes (on > svg) remain untouched. saturate and drop-shadow give
+   it the neon-glow vibe. */
+/* ====================================================================== */
+@keyframes superSurgePulse {
+  0%   { filter: hue-rotate(0deg)   saturate(1.7) drop-shadow(0 0 16px rgba(255, 60, 60, 0.85)); }
+  20%  { filter: hue-rotate(72deg)  saturate(1.7) drop-shadow(0 0 16px rgba(255, 170, 0, 0.85)); }
+  40%  { filter: hue-rotate(144deg) saturate(1.7) drop-shadow(0 0 18px rgba(255, 240, 0, 0.85)); }
+  60%  { filter: hue-rotate(216deg) saturate(1.7) drop-shadow(0 0 18px rgba(0, 230, 200, 0.85)); }
+  80%  { filter: hue-rotate(288deg) saturate(1.7) drop-shadow(0 0 16px rgba(120, 80, 255, 0.85)); }
+  100% { filter: hue-rotate(360deg) saturate(1.7) drop-shadow(0 0 16px rgba(255, 60, 60, 0.85)); }
+}
+.character[data-skin="gokustyle"] {
+  animation: superSurgePulse 5s linear infinite;
+}
+/* Outfit-preview cards (small) use the same effect but with a slightly
+   reduced glow so they don't bleed into neighbouring cards. */
+.outfit-preview .character[data-skin="gokustyle"] {
+  animation: superSurgePulse 5s linear infinite;
+}
+
+/* Locked outfit (e.g. Super Surge before its unlock condition is met). */
+.shop-item.locked {
+  opacity: 0.7;
+  filter: grayscale(0.4);
+}
+.shop-item.locked .item-price {
+  color: var(--muted);
+}
+.shop-item.locked .item-name::after {
+  content: " 🔒";
+  font-size: 0.8em;
+  opacity: 0.7;
+}

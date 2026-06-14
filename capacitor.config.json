@@ -1,0 +1,12 @@
+{
+  "appId": "io.focusix7.app",
+  "appName": "Focusix7",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#ffefe2"
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
