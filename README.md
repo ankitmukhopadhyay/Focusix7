@@ -6,8 +6,8 @@ stronger. Earn brain cells and aura, buy outfits and passive buffs, and push
 the World Focus meter to 100 to banish Mr. 67 — then do it again.
 
 **Closed testing is live - _Test out the app following these steps_:**
-> Join this [Google Group approved for closed testing](https://groups.google.com/g/focusix7).
-> Click on the button below, now you will have access to the app.
+> 1. Join this [Google Group approved for closed testing](https://groups.google.com/g/focusix7).
+> 2. Click on the button below, now you will have access to the app.
 
 [![Get it on Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)](https://play.google.com/store/apps/details?id=io.focusix7.app)
 
